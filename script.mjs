@@ -6,10 +6,11 @@ import HTTP_CODES from './utils/httpCodes.mjs';
 const app = express(); // Oppretter en instans av Express
 // const port  = (process.env.PORT) || 8000; // Setter porten for serveren
 //Har hatt problemer med å få denne porten til å fungere, endrer til:
-const port = process.env.PORT || 8080;
+const port = (process.env.PORT) || 3000;
 
 
 app.set('port', port); // Setter porten for serveren
+
 app.use(express.static('public')); // Middleware for å servere statiske filer
 app.use(express.json()); // Middleware for å lese JSON-data
 
@@ -106,17 +107,13 @@ app.get("/tmp/simulate/:code", (req, res, next) => {
     if (isNaN(code)) {
         res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).send("Bad Request: Code must be a number."); 
     } else {
-        res.status(code).send("Response with status code ${code}").end();
+        res.status(code).send(`Response with status code ${code}`).end();
     }
 });
 
 
 app.listen(app.get('port'), function () {
-    console.log('server is running', app.get('port'));
-});
-
-//Ovennevnte kan forkortes slik:
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`server is running on port ${app.get('port')}`);
+}).on('error', (err) => {
+    console.error('Failed to start server:', err);
 });
