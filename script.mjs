@@ -19,18 +19,16 @@ function getRoot (req, res, next) { // En funksjon som tar imot en forespørsel,
     res.status(HTTP_CODES.SUCCESS.OK).send("GZ").end(); // Sender en respons med statuskoden 200 (OK) og teksten "GZ"
 } //.end() // Avslutter responsen, men er ikke alltid nødvendig etter .send() fordi .send() gjør det samme. Blir det som semikolon?
 
-app.get("/", getRoot); // Setter opp en rute på rot ("/") som kjører funksjonen getRoot når den blir forespurt
+app.get("/", getRoot); // Setter opp en rute på root ("/") som kjører funksjonen getRoot når den blir forespurt
 
 
 //Simulering av en database
 //DIKT
 function getHaiku (req, res, next) {
     const haikuFrosk = `
-    <pre>
         En gammel dam.
         En frosk hopper.
         Plask!
-    </pre>
     `;
 
     res.status(HTTP_CODES.SUCCESS.OK).send(haikuFrosk).end();
@@ -40,13 +38,13 @@ app.get("/tmp/poem/haiku", getHaiku);
 
 function getAlliteration (req, res, next) {
     const alliteration = `
-    <pre>
+
         "To sit in solemn silence in a dull, dark dock,
         In a pestilential prison, with a lifelong lock,
         Awaiting the sensation of a short, sharp shock,
         From a cheap and chippy chopper on a big black block!"
         - The Mikado, Gilbert and Sullivan
-    </pre>`;
+        `;
 
     res.status(HTTP_CODES.SUCCESS.OK).send(alliteration).end();
 };
@@ -55,13 +53,12 @@ app.get("/tmp/poem/alliteration", getAlliteration);
 
 function getLimerick (req, res, next) {
     const limerick = `
-    <pre>
         There once was a man from Peru,
         Who dreamed he was eating his shoe.
         He woke with a fright,
         In the middle of the night,
         To find that his dream had come true!
-    </pre>`;
+        `;
 
     res.status(HTTP_CODES.SUCCESS.OK).send(limerick).end();
 };
@@ -99,17 +96,16 @@ app.post("/tmp/sum/:a/:b", (req, res, next) => {
     res.status(HTTP_CODES.SUCCESS.OK).send(`The sum of ${numA} and ${numB} is ${sum}`);
 });
 
-//Simulerer forskjellige HTTP-statuskoder
-
-app.get("/tmp/simulate/:code", (req, res, next) => { 
-    const code = parseInt(req.params.code, 10); // parseInt konverterer strengen til heltall, og 10 er tallsystemet (desimaltall).
-    if (isNaN(code)) { 
-        res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).send("Bad Request: Code must be a number."); 
-    } else {
-        res.status(code).send(`Response with status code ${code}`).end(); // Sender en respons med statuskoden som ble sendt inn.
-    }
+//Simuler en tilfeldig http-statuskode fra objektet HTTP_CODES i httpCodes.mjs for å kjøre tilfeldige values fra objekter som er importert inn i denne filen.
+app.get("/tmp/random-status", (req, res, next) => {
+    const allCodes = [
+        ...Object.values(HTTP_CODES.SUCCESS),
+        ...Object.values(HTTP_CODES.CLIENT_ERROR),
+        ...Object.values(HTTP_CODES.SERVER_ERROR)
+    ];
+    const randomCode = allCodes[Math.floor(Math.random() * allCodes.length)];
+    res.status(randomCode).send(`Response with random status code ${randomCode}`).end();
 });
-
 
 app.listen(app.get('port'), function () {
     console.log(`server is running on port ${app.get('port')}`);
