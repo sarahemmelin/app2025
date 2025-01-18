@@ -86,9 +86,8 @@ app.get("/tmp/quote", getQuote);
 
 
 //SUM (Skal bruke POST) - Skal ta imot to tall og returnere summen av dem
-
-app.post("/tmp/sum", (req, res, next) => {
-    const { a, b } = req.body;
+app.post("/tmp/sum/:a/:b", (req, res, next) => { 
+    const { a, b } = req.params;
     const numA = parseFloat(a);
     const numB = parseFloat(b);
 
@@ -102,12 +101,12 @@ app.post("/tmp/sum", (req, res, next) => {
 
 //Simulerer forskjellige HTTP-statuskoder
 
-app.get("/tmp/simulate/:code", (req, res, next) => {
-    const code = parseInt(req.params.code, 10);
-    if (isNaN(code)) {
+app.get("/tmp/simulate/:code", (req, res, next) => { 
+    const code = parseInt(req.params.code, 10); // parseInt konverterer strengen til heltall, og 10 er tallsystemet (desimaltall).
+    if (isNaN(code)) { 
         res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).send("Bad Request: Code must be a number."); 
     } else {
-        res.status(code).send(`Response with status code ${code}`).end();
+        res.status(code).send(`Response with status code ${code}`).end(); // Sender en respons med statuskoden som ble sendt inn.
     }
 });
 
