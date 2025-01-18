@@ -46,5 +46,6 @@ Kjør serveren med
 Åpne en ny terminal og skriv
   curl -X POST http://localhost:3000/tmp/sum/3/8
 
+NB! Det inngår **KOMMENTARER** i koden for min egen del (når jeg skal se tilbake på den og jeg enda ikke kan dette ordentlig - repetisjon). 
 
 Forfatter: Sarah
