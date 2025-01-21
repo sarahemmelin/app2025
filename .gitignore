@@ -1,0 +1,17 @@
+const port  = (process.env.PORT) || 8000; // Setter porten for serveren
+Har hatt problemer med å få denne porten til å fungere, endrer til:
+const port = (process.env.PORT) || 3000;
+
+
+app.set('port', port); // Setter porten for serveren
+
+app.use(express.static('public')); // Middleware for å servere statiske filer
+app.use(express.json()); // Middleware for å lese JSON-data
+
+Rute: Root ("/") - Returnerer "GZ"
+function getRoot (req, res, next) { // En funksjon som tar imot en forespørsel, og sender en respons. (Request, Response, Next (som er neste funksjon i rekken))    
+res.status(HTTP_CODES.SUCCESS.OK).send("GZ").end(); // Sender en respons med statuskoden 200 (OK) og teksten "GZ"
+} //.end() // Avslutter responsen, men er ikke alltid nødvendig etter .send() fordi .send() gjør det samme. Blir det som semikolon?
+
+app.get("/", getRoot); // Setter opp en rute på root ("/") som kjører funksjonen getRoot når den blir forespurt
+
