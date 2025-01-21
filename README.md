@@ -1,4 +1,7 @@
 **README - fil for å bruke prosjektet:**
+Ignorer for nå, denne filen må skrives om.
+
+
 Åpne en terminal: 
 Skriv: 
   cd '/din/lokale/rute/til/repoet' 
@@ -45,26 +48,5 @@ Kjør serveren med
   
 Åpne en ny terminal og skriv
   curl -X POST http://localhost:3000/tmp/sum/3/8
-
-========== Kortstokk ==================================
-
-Stokker kortstokken med PATCH (Shuffle)
-Google-søk på hvordan man shuffler key-value-par inne i et array returnerer 
-en algoritme som heter Fisher-Yates shuffle. Denne algoritmen er en av de mest 
-effektive måtene å shuffler et array på.
-https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-
-Eksempel 
-        Dette kalles "destrukturering" for å bytte plass på to elementer i et array.
-        Eksempel: 
-        let array = [1, 2, 3, 4, 5];
-        let i = 1; // Indeks 1 (verdi 2)
-        let j = 3; // Indeks 3 (verdi 4)
-
-        Bytte plass på elementene på indeks 1 og 3
-        [array[i], array[j]] = [array[j], array[i]];
-
-        console.log(array); // Output: [1, 4, 3, 2, 5]
-
 
 Forfatter: Sarah
