@@ -15,3 +15,41 @@ res.status(HTTP_CODES.SUCCESS.OK).send("GZ").end(); // Sender en respons med sta
 
 app.get("/", getRoot); // Setter opp en rute på root ("/") som kjører funksjonen getRoot når den blir forespurt
 
+========== Kortstokk ==================================
+
+Stokker kortstokken med PATCH (Shuffle)
+Google-søk på hvordan man shuffler key-value-par inne i et array returnerer 
+en algoritme som heter Fisher-Yates shuffle. Denne algoritmen er en av de mest 
+effektive måtene å shuffler et array på.
+https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+
+Eksempel 
+        Dette kalles "destrukturering" for å bytte plass på to elementer i et array.
+        Eksempel: 
+        let array = [1, 2, 3, 4, 5];
+        let i = 1; // Indeks 1 (verdi 2)
+        let j = 3; // Indeks 3 (verdi 4)
+
+        Bytte plass på elementene på indeks 1 og 3
+        [array[i], array[j]] = [array[j], array[i]];
+
+        console.log(array); // Output: [1, 4, 3, 2, 5]
+
+//Simuler en tilfeldig http-statuskode fra objektet HTTP_CODES i httpCodes.mjs for å kjøre tilfeldige values fra objekter som er importert inn i denne filen.
+// app.get("/tmp/random-status", (req, res, next) => {
+//     const allCodes = [
+//         ...Object.values(HTTP_CODES.SUCCESS),
+//         ...Object.values(HTTP_CODES.CLIENT_ERROR),
+//         ...Object.values(HTTP_CODES.SERVER_ERROR)
+//     ];
+//     const randomCode = allCodes[Math.floor(Math.random() * allCodes.length)];
+//     res.status(randomCode).send(`Response with random status code ${randomCode}`).end();
+// });
+
+// app.listen(app.get('port'), function () {
+//     console.log(`server is running on port ${app.get('port')}`);
+// }).on('error', (err) => {
+//     console.error('Failed to start server:', err);
+// });
+
+//notater: standarden på nett er "index.html" som default. 

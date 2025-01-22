@@ -1,8 +1,8 @@
-//================================ Deck of cards =====================================
-//Lage en ny kortstokk med ID (POST)
+import  HTTP_CODES  from '../utils/httpCodes.mjs';
 
-let deckIdCounter = 0; // Global variabel for å holde styr på deckId
-const decks = {}; // In-memory lagring for kortstokkene
+//================================ Deck of cards =====================================
+let deckIdCounter = 0; 
+const decks = {}; 
 
 const NewDeckOfCards = {
     deckId: 0,
@@ -73,7 +73,7 @@ function shuffle(array){
 }
 
 //Lager en ny kortstokk med POST
-function createDeck (req, res, next) {
+export function createDeck (req, res, next) {
     deckIdCounter++;
     const deckId = deckIdCounter;
     const newDeck = { ...NewDeckOfCards, deckId};
@@ -82,10 +82,8 @@ function createDeck (req, res, next) {
     res.status(HTTP_CODES.SUCCESS.CREATED).send(newDeck);
 }
 
-app.post("/temp/deck", createDeck);
-
 // Stokker kortstokken med PATCH (Shuffle)
-function shuffleDeck (req, res, next) {
+export function shuffleDeck (req, res, next) {
     const { deckId } = req.params;
     const deck = decks[deckId]; // Finn kortstokken basert på deckId
     if (!deck){
@@ -95,12 +93,10 @@ function shuffleDeck (req, res, next) {
     deck.cards = shuffle(deck.cards);
     res.status(HTTP_CODES.SUCCESS.OK).send(deck);
 }
-app.patch("/temp/deck/shuffle/:deckId", shuffleDeck);
 
 // Returnerer hele kortstokken med GET (View) 
 // (minus kort som allerede er trukket - kommer senere)
-
-function getDeck (req, res, next) {
+export function getDeck (req, res, next) {
     const { deckId } = req.params;
     const deck = decks[deckId];
     if (!deck){
@@ -110,16 +106,14 @@ function getDeck (req, res, next) {
 }
 
 //Se alle kortstokkene (så man kan se at de er stokket)
-app.get("/temp/deck/:deckId", getDeck);
-
-function getAllDecks (req, res, next) {
+export function getAllDecks (req, res, next) {
     res.status(HTTP_CODES.SUCCESS.OK).send(decks);
 }
 
-app.get("/temp/decks", getAllDecks);
+
 
 // Trekker et kort fra kortstokken med GET (Draw) og returnerer kortet (og fjerner det fra kortstokken)
-function drawCard (req, res, next) {
+export function drawCard (req, res, next) {
     const { deckId } = req.params;
     const deck = decks[deckId];
     if (!deck){
@@ -130,5 +124,3 @@ function drawCard (req, res, next) {
     decks[deckId] = deck; // Oppdaterer kortstokken i in-memory lagringen
     res.status(HTTP_CODES.SUCCESS.OK).send(card);
 }
-
-app.get("/temp/deck/draw/:deckId", drawCard);

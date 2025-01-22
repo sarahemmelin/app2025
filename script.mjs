@@ -1,25 +1,28 @@
 'use strict';
 
 import express from 'express';
+import path from 'path';
 import HTTP_CODES from './utils/httpCodes.mjs';
 import deckRoutes from './routes/deckRoutes.mjs';
 import poetryRoutes from './routes/poetryRoutes.mjs';
 
 const app = express();
-const port = (process.env.PORT) || 3000;
+const port = process.env.PORT || 3000;
 
 app.set('port', port);
-app.use(express.static('public'));
+app.use(express.static('public/DeckOfCards'));
 app.use(express.json());
 
-// Rute for å sjekke tilkobling
+// Rot-rute: Automatisk servering av index.html
 app.get("/", (req, res) => {
-    res.status(HTTP_CODES.SUCCESS.OK).send("You are connected!").end();
+    res.sendFile(path.resolve('public/DeckOfCards/index.html'));
 });
 
+// Registrer API-ruter
 app.use('/temp', deckRoutes);
 app.use('/tmp', poetryRoutes);
 
+// Start serveren
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
