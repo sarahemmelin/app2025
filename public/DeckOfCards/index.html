@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deck of Cards</title>
+</head>
+<body>
+    <h1>Welcome to the Deck of Cards</h1>
+    
+    <button id="createDeck">Create New Deck</button>
+    <button id="drawCard">Draw a Card</button>
+    <button id="shuffleDeck">Shuffle Deck</button>
+    
+    <p id="output"></p>
+
+    <script>
+        let deckId = null;
+
+        // Opprett en ny kortstokk
+        document.getElementById('createDeck').addEventListener('click', async () => {
+            const response = await fetch('/temp/deck', { method: 'POST' });
+            const data = await response.json();
+            deckId = data.deckId; // Lagre deckId for videre bruk
+            document.getElementById('output').innerText = `New deck created with ID: ${deckId}`;
+        });
+
+        // Trekk et kort fra kortstokken
+        document.getElementById('drawCard').addEventListener('click', async () => {
+            if (!deckId) {
+                alert("Please create a deck first!");
+                return;
+            }
+            const response = await fetch(`/temp/deck/draw/${deckId}`);
+            const card = await response.json();
+            document.getElementById('output').innerText = `You drew: ${card.suit} ${card.value}`;
+        });
+
+        // Stokke kortstokken
+        document.getElementById('shuffleDeck').addEventListener('click', async () => {
+            if (!deckId) {
+                alert("Please create a deck first!");
+                return;
+            }
+            const response = await fetch(`/temp/deck/shuffle/${deckId}`, { method: 'PATCH' });
+            document.getElementById('output').innerText = `Deck shuffled successfully!`; 
+        });
+
+    </script>
+</body>
+</html>
