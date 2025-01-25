@@ -60,7 +60,7 @@ const NewDeckOfCards = {
         { suit: "spades", value: "K" },
         { suit: "spades", value: "A" },
     ],
-    discardPile: [],
+    discardPile: [], 
 };
 
 //Fisher-Yates shuffle
