@@ -114,14 +114,51 @@ export function getAllDecks (req, res, next) {
 
 
 // Trekker et kort fra kortstokken med GET (Draw) og returnerer kortet (og fjerner det fra kortstokken)
-export function drawCard (req, res, next) {
+// export function drawCard (req, res, next) {
+//     const { deckId } = req.params;
+//     const deck = decks[deckId];
+//     if (!deck){
+//         return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).send("Deck not found");
+//     }
+
+//     const card = deck.cards.pop(); // Trekker et kort fra kortstokken
+//     decks[deckId] = deck; // Oppdaterer kortstokken i in-memory lagringen
+//     res.status(HTTP_CODES.SUCCESS.OK).send(card);
+// }
+
+export function reshuffleDeck(req, res, next) {
     const { deckId } = req.params;
     const deck = decks[deckId];
-    if (!deck){
+
+    if (!deck) {
         return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).send("Deck not found");
     }
 
-    const card = deck.cards.pop(); // Trekker et kort fra kortstokken
-    decks[deckId] = deck; // Oppdaterer kortstokken i in-memory lagringen
+    deck.cards = [...deck.cards, ...deck.discardPile];
+    deck.discardPile = [];
+
+    deck.cards = shuffle(deck.cards);
+
+    res.status(HTTP_CODES.SUCCESS.OK).send({
+        message: "Deck reshuffled with discard pile",
+        deck
+    });
+}
+
+export function drawCard(req, res, next) {
+    const { deckId } = req.params;
+    const deck = decks[deckId];
+
+    if (deck.cards.length === 0) {
+        return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).send("Deck not found");
+    }
+
+    if (deck.cards.length === 0) {
+        return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).send("No more cards in the deck");
+    }
+
+    const card = deck.cards.pop();
+    deck.discardPile.push(card);
+    
     res.status(HTTP_CODES.SUCCESS.OK).send(card);
 }
