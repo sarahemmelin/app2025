@@ -1,7 +1,7 @@
 **README - fil for å bruke prosjektet:**
 Ignorer for nå, denne filen må skrives om.
 
-
+*Assignment 1:*
 Åpne en terminal: 
 Skriv: 
   cd '/din/lokale/rute/til/repoet' 
@@ -50,3 +50,47 @@ Kjør serveren med
   curl -X POST http://localhost:3000/tmp/sum/3/8
 
 Forfatter: Sarah
+
+*Assignment 2*
+**Prosjektet er strukturert slik:**
+(per 26.01.2025)
+demo25/
+│-- controllers/
+│-- routes/
+│-- public/
+│   ├── css/
+│   │   └── styles.css       
+│   ├── js/
+│   │   ├── api.js           # Kommunikasjon med serveren (API-kall)
+│   │   ├── ui.js            # Håndtering av brukergrensesnittet
+│   │   ├── app.js           # Hovedlogikken til klienten
+│   ├── index.html           # Hovedsiden
+│-- script.mjs
+│-- package.json
+
+
+Serversiden er bygget opp med .mjs og klienten benytter .js. 
+
+**Grunner til bruk av .mjs på serveren:**
+- ES-moduler er standardisert:
+Node.js støtter både CommonJS (require) og ESM (import/export).
+.mjs gjør det tydelig at filen bruker ES-moduler.
+- Backward compatibility:
+Mange gamle prosjekter bruker fortsatt CommonJS (.js).
+For å unngå konflikter, anbefaler Node .mjs for ESM-filer.
+- Konfigurasjon via package.json:
+Hvis man vil bruke .js med ESM i Node.js, må man angi "type": "module" i package.json.
+Hvis ikke, vil .js standardisere til CommonJS.
+
+**Grunner til å bruke .js på klientsiden:**
+- Standard praksis:
+Nettlesere støtter ES-moduler i .js-filer uten problemer.
+- Forenklet håndtering:
+De fleste frontend-rammeverk og verktøy (React, Vue, etc.) forventer .js-filer.
+- Bredere kompatibilitet:
+Enkelte eldre nettlesere forstår kanskje ikke .mjs, mens .js er universelt akseptert.
+Bedre integrasjon med byggverktøy:
+
+Verktøy som Webpack, Vite og Parcel håndterer .js-filer sømløst uten spesialkonfigurasjon.
+
+
