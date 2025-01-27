@@ -111,21 +111,6 @@ export function getAllDecks (req, res, next) {
     res.status(HTTP_CODES.SUCCESS.OK).send(decks);
 }
 
-
-
-// Trekker et kort fra kortstokken med GET (Draw) og returnerer kortet (og fjerner det fra kortstokken)
-// export function drawCard (req, res, next) {
-//     const { deckId } = req.params;
-//     const deck = decks[deckId];
-//     if (!deck){
-//         return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).send("Deck not found");
-//     }
-
-//     const card = deck.cards.pop(); // Trekker et kort fra kortstokken
-//     decks[deckId] = deck; // Oppdaterer kortstokken i in-memory lagringen
-//     res.status(HTTP_CODES.SUCCESS.OK).send(card);
-// }
-
 export function reshuffleDeck(req, res, next) {
     const { deckId } = req.params;
     const deck = decks[deckId];
