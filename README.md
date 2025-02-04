@@ -69,28 +69,6 @@ demo25/
 │-- package.json
 
 
-Serversiden er bygget opp med .mjs og klienten benytter .js. 
-
-**Grunner til bruk av .mjs på serveren:**
-- ES-moduler er standardisert:
-Node.js støtter både CommonJS (require) og ESM (import/export).
-.mjs gjør det tydelig at filen bruker ES-moduler.
-- Backward compatibility:
-Mange gamle prosjekter bruker fortsatt CommonJS (.js).
-For å unngå konflikter, anbefaler Node .mjs for ESM-filer.
-- Konfigurasjon via package.json:
-Hvis man vil bruke .js med ESM i Node.js, må man angi "type": "module" i package.json.
-Hvis ikke, vil .js standardisere til CommonJS.
-
-**Grunner til å bruke .js på klientsiden:**
-- Standard praksis:
-Nettlesere støtter ES-moduler i .js-filer uten problemer.
-- Forenklet håndtering:
-De fleste frontend-rammeverk og verktøy (React, Vue, etc.) forventer .js-filer.
-- Bredere kompatibilitet:
-Enkelte eldre nettlesere forstår kanskje ikke .mjs, mens .js er universelt akseptert.
-Bedre integrasjon med byggverktøy:
-
-Verktøy som Webpack, Vite og Parcel håndterer .js-filer sømløst uten spesialkonfigurasjon.
-
-
+*Assignment: Middleware* 
+**Middleware for sortering av produkter i en nettbutikk.**
+Middlewaren skal håndtere filtrering av data før routeren håndterer det - er iallefall tanken.
