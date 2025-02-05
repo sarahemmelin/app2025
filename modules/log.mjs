@@ -84,7 +84,8 @@
 // export default log;
 
 const log = function (req, res, next) {
-    
+    console.log(`|${req.method}|${Date.now()}|${req.url}`);
+    next();
 };
 
 

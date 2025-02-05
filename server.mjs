@@ -12,9 +12,9 @@ const port = process.env.PORT || 3000;
 
 
 server.set('port', port);
+server.use(log);
 server.use(express.static('public/DeckOfCards'));
 server.use(express.json());
-server.use(log);
 
 function serveDeckPage(req, res) {
     res.sendFile(path.resolve('public/DeckOfCards/index.html'));
