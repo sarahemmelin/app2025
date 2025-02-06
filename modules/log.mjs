@@ -24,6 +24,14 @@ const log = function (loggLevel){
     return logInstance;
 };
 
+export const eventLogger = function (eventDescription, loggLevel = LOGG_LEVELS.VERBOSE) {
+
+    if (loggLevel >= currentGlobalLogLvl) {
+        let logStatement = `|${ReadableTime}||${eventDescription}`;
+        saveLog(logStatement);
+    }
+}
+
 const colorize = (text) =>{
     const colors = {
         red: '\x1b[31m',
@@ -41,7 +49,7 @@ const colorize = (text) =>{
         PUT: colors.blue
     }
 
-    return `"${methods[text]}${text}"`
+    return `"${methods[text]}${text}${colors.reset}"`;
 };
 
 const logWorker = new Worker(new URL("../workers/logWorker.mjs", import.meta.url));
