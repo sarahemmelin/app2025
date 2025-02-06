@@ -13,10 +13,9 @@ const server = express();
 const port = process.env.PORT || 3000;
 
 const logger = log(LOGG_LEVELS.VERBOSE);
-const loggerAlways = log(LOGG_LEVELS.ALWAYS);
 
 server.set('port', port);
-server.use(logger, loggerAlways);
+server.use(logger);
 server.use(express.static('public/DeckOfCards'));
 server.use(express.json());
 
