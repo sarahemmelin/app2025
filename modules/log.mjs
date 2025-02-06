@@ -83,10 +83,14 @@
 
 // export default log;
 
-const log = function (req, res, next) {
-    console.log(`|${req.method}|${Date.now()}|${req.url}`);
-    next();
-};
+import ReadableTime from '../utils/translateTime.mjs';
 
+
+const log = function (req, res, next) {
+    
+    console.log(`|${req.method}|${ReadableTime}|${req.url}`);
+    next();
+
+};
 
 export default log;
