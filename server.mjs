@@ -7,8 +7,6 @@ import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
 
-const ENABLE_LOGGING = true;
-
 const server = express();
 const port = process.env.PORT || 3000;
 
