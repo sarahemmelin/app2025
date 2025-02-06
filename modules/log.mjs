@@ -85,12 +85,47 @@
 
 import ReadableTime from '../utils/translateTime.mjs';
 
+let level_id = 0;
 
-const log = function (req, res, next) {
-    
-    console.log(`|${req.method}|${ReadableTime}|${req.url}`);
-    next();
-
+export const LOGG_LEVELS = {
+    VERBOSE: ++level_id,
+    IMPORTANT: ++level_id,
+    ALWAYS: ++level_id,
 };
+
+let currentGlobalLogLvl = LOGG_LEVELS.VERBOSE;
+
+const log = function (loggLevel){
+
+
+    return
+}
+
+
+
+const logVerbose = (req, res, next) => {
+    if (LOGG_LEVELS.VERBOSE == currentGlobalLogLvl) {
+        printLog(req, res);
+    }
+    next();
+}
+
+const logImportant = (req, res, next) => {
+    if (LOGG_LEVELS.IMPORTANT == currentGlobalLogLvl) {
+        printLog(req, res);
+    }
+    next();
+}
+
+const logAlways = (req, res, next) => {
+    if (LOGG_LEVELS.ALWAYS == currentGlobalLogLvl) {
+        printLog(req, res);
+    }
+    next();
+}
+
+const printLog = (req, res) =>{
+    console.log(`|${req.method}|${ReadableTime}|${req.url}`);
+}
 
 export default log;
