@@ -1,6 +1,4 @@
 import ReadableTime from '../utils/translateTime.mjs';
-import { text } from 'express';
-import fs from "node:fs/promises";
 import { Worker } from "node:worker_threads";
 
 let level_id = 0;

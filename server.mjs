@@ -6,6 +6,7 @@ import deckRoutes from './routes/deckRoutes.mjs';
 import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
+import { vanguard } from './modules/vanguard.mjs';
 
 const server = express();
 const port = process.env.PORT || 3000;
