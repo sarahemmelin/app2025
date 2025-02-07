@@ -4,6 +4,7 @@ const cyberDemonOverlord = {
     phase: 1, 
     attackCount: 0,
     defeated: false,
+    hp: 100,
 
     attackPatterns: [
         {
@@ -46,7 +47,10 @@ const cyberDemonOverlord = {
     ],
 
     attack(server) {
-        if (this.defeated) return;
+        if (this.hp <= 0) {
+            console.log("💀 CYBERDEMON OVERLORD HAS DRAMATICALLY BEEN DEFEATED!");
+            return;
+        }
 
         const pattern = this.attackPatterns[this.phase - 1];
         console.log(`🔥 Overlord Zero initiates: ${pattern.name} 🔥`);
@@ -71,9 +75,13 @@ const cyberDemonOverlord = {
         }
     },
 
-    defeat() {
-        console.log("💀 Overlord Zero has been vanquished! But for how long...? 😈");
-        this.defeated = true;
+    takeDamage() {
+        this.hp--;
+        console.log(`⚡ ${this.name} takes damage! HP left: ${this.hp}`);
+
+        if (this.hp <= 0) {
+            console.log("💀 OVERLORD ZERO HAS DRAMATICALLY BEEN DEFEATED!");
+        }
     }
 };
 
