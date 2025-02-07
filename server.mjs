@@ -20,14 +20,19 @@ server.use(express.static('public/DeckOfCards'));
 server.use(express.json());
 
 
-function serveDeckPage(req, res) {
-    eventLogger("Serving deck page");
-    res.sendFile(path.resolve('public/DeckOfCards/index.html'));
-}
 
 server.use('/temp', deckRoutes);
 server.use('/tmp', poetryRoutes);
 
+
+
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
+
+
+function serveDeckPage(req, res) {
+    eventLogger("Serving deck page");
+    res.sendFile(path.resolve('public/DeckOfCards/index.html'));
+}

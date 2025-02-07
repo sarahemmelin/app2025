@@ -49,26 +49,17 @@ Kjør serveren med
 Åpne en ny terminal og skriv
   curl -X POST http://localhost:3000/tmp/sum/3/8
 
-Forfatter: Sarah
-
-*Assignment 2*
-**Prosjektet er strukturert slik:**
-(per 26.01.2025)
-demo25/
-│-- controllers/
-│-- routes/
-│-- public/
-│   ├── css/
-│   │   └── styles.css       
-│   ├── js/
-│   │   ├── api.js           # Kommunikasjon med serveren (API-kall)
-│   │   ├── ui.js            # Håndtering av brukergrensesnittet
-│   │   ├── app.js           # Hovedlogikken til klienten
-│   ├── index.html           # Hovedsiden
-│-- script.mjs
-│-- package.json
-
 
 *Assignment: Middleware* 
 **Middleware for sortering av produkter i en nettbutikk.**
 Middlewaren skal håndtere filtrering av data før routeren håndterer det - er iallefall tanken.
+
+Alternativ 2: 
+**Middleware for filtrering av ondsinnet trafikk mot serveren.**
+Middlewaren skal filtrere ut ondsinnet trafikk mot serveren. 
+1. Research.
+2. Filstruktur.
+3. Hva starter vi med? 
+  - Middleware-filen, la oss kalle den "vanguard.mjs"
+  - 
+4. 
