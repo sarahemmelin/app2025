@@ -76,7 +76,7 @@ export const vanguard = {
           (timestamp) => now - timestamp < vanguard.timeWindow
         );
 
-        vanguard.requestTimestamps[ip] = vanguard.requestedTimestamps[ip].length;
+        vanguard.requestCounts[ip] = vanguard.requestTimestamps[ip].length;
 
         if (vanguard.requestCounts[ip] > vanguard.DDOS_threshold) {
           vanguard.logEvent(
