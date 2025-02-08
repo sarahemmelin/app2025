@@ -15,7 +15,10 @@ export const vanguard = {
   blacklistedIPs: new Set(["192.168.1.100", "45.33.23.21"]),
   dangerousPatterns: [/<script>/i, /union select/i, /eval\(/i, /\.\.\//i],
   requestCounts: {},
+  requestTimestamps: {},
   DDOS_threshold: 10,
+  blacklistThreshold: 20,
+  timeWindow: 10000,
 
   skills: [
     {
@@ -63,24 +66,44 @@ export const vanguard = {
       description: "Limits rapid requests to prevent spam attacks.",
       use(req, res) {
         const ip = req.ip;
-        vanguard.requestCounts[ip] = (vanguard.requestCounts[ip] || 0) + 1;
+        const now = Date.now();
+        
+        if (!vanguard.requestTimestamps[ip]) {
+          vanguard.requestTimestamps[ip] = [];
+        }
+        vanguard.requestTimestamps[ip].push(now);
+        vanguard.requestTimestamps[ip] = vanguard.requestTimestamps[ip].filter(
+          (timestamp) => now - timestamp < vanguard.timeWindow
+        );
+
+        vanguard.requestTimestamps[ip] = vanguard.requestedTimestamps[ip].length;
 
         if (vanguard.requestCounts[ip] > vanguard.DDOS_threshold) {
+          vanguard.logEvent(
+            ip, 
+            "🪓 Barbarian",
+            "HIGH REQUEST RATE DETECTED",
+            req.url
+            );
+        }
+
+        // vanguard.requestCounts[ip] = (vanguard.requestCounts[ip] || 0) + 1;
+
+        if (vanguard.requestCounts[ip] > vanguard.blacklistThreshold) {
           vanguard.blacklistedIPs.add(ip);
           vanguard.logEvent(
             ip,
-            "🪓 Barbarian",
-            "DDOS ATTEMPT BLOCKED",
+            "🪓 BAN",
+            "IP BLACKLISTED FOR DDoS",
             req.url
           );
           res
             .status(HTTP_CODES.CLIENT_ERROR.TOO_MANY_REQUESTS)
-            .send("Vanguard: Too many requests! You are temporarily banned.");
-
+            .send("Vanguard: Too many requests! You are permanently banned");
           vanguard.attackEnemy(req.url);
-
           return false;
         }
+
         return true;
       },
     },

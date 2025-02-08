@@ -40,7 +40,7 @@ server.use('/tmp', poetryRoutes);
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log("VANGUARD IS READY TO DEFEND!");
-    // startBossFight();
+    startBossFight();
 });
 
 
