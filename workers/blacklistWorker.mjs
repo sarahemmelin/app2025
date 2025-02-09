@@ -1,44 +1,50 @@
 import { parentPort } from "worker_threads";
 import fs from "fs/promises";
 
-console.log("🛠️ blacklistWorker started!"); 
-
-const BLACKLIST_FILE = "blacklist.json";
-const BLACKLIST_CSV = "./logs/blacklist.csv";
-const removeAnsiCodes = (text) => text.replace(/\x1B\[[0-9;]*m/g, "");
+const BLACKLIST_FILE = "./data/blacklist.json";
 
 async function saveBlacklist(blacklistedIPs) {
     try {
-        console.log("BlacklistWorker lagrer følgende IP-er:", [...blacklistedIPs]); 
-        await fs.writeFile(BLACKLIST_FILE, JSON.stringify([...blacklistedIPs], null, 2));
+        console.log("📂 [Blacklist Worker] Prøver å lagre blacklist:", blacklistedIPs);
+        const jsonData = JSON.stringify([...blacklistedIPs], null, 2);
+        console.log("✍️ JSON-data som skal skrives:", jsonData);
 
-        const csvData = [...blacklistedIPs].map(ip => `${new Date().toISOString()},${ip}`).join("\n");
-        await fs.appendFile(BLACKLIST_CSV, csvData + "\n");
+        await fs.writeFile(BLACKLIST_FILE, jsonData);
+        console.log("✅ [Blacklist Worker] Lagret blacklist.json!");
 
-        console.log("Blacklist saved successfully.");
+        // ✨ Send bekreftelse tilbake til Vanguard
+        parentPort.postMessage({ type: "saved" });
+
     } catch (error) {
-        console.error("Error saving blacklist:", error);
+        console.error("❌ [Blacklist Worker] Feil ved lagring:", error);
     }
 }
 
 async function loadBlacklist() {
     try {
-        if (await fs.stat(BLACKLIST_FILE).then(() => true).catch(() => false)) {
-            const data = await fs.readFile(BLACKLIST_FILE, "utf8");
-            return new Set(JSON.parse(data));
+        const exists = await fs.access(BLACKLIST_FILE).then(() => true).catch(() => false);
+        if (!exists) {
+            console.log("⚠️ [Blacklist Worker] blacklist.json ikke funnet, oppretter ny fil...");
+            await fs.writeFile(BLACKLIST_FILE, JSON.stringify([]));
+            return new Set();
         }
+
+        const data = JSON.parse(await fs.readFile(BLACKLIST_FILE, "utf8"));
+        console.log("📂 [Blacklist Worker] Lastet inn blacklist:", data);
+        return new Set(data);
     } catch (error) {
-        console.error("Error loading blacklist:", error);
+        console.error("❌ [Blacklist Worker] Feil ved lasting av blacklist:", error);
+        return new Set();
     }
-    return new Set();
 }
 
 parentPort.on("message", async (msg) => {
-    console.log("Blacklistworker mottok melding:", msg);
+    console.log("📩 [Blacklist Worker] Mottok melding:", msg);
+
     if (msg.type === "save") {
         await saveBlacklist(msg.data);
     } else if (msg.type === "load") {
-        const loadedBlacklist = await loadBlacklist();
-        parentPort.postMessage({ type: "loaded", data: loadedBlacklist });
+        const loadedData = await loadBlacklist();
+        parentPort.postMessage({ type: "loaded", data: [...loadedData] });
     }
 });

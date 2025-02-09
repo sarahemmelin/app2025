@@ -33,6 +33,7 @@ export const vanguard = {
       description: "Blocks known blacklisted IPs with his 403-shield.",
       use(req, res) {
         const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
+        console.log(`🚨 Checking if ${ip} is blacklisted:`, vanguard.blacklistedIPs);
 
     if (vanguard.blacklistedIPs.has(ip)) {
         console.log("🚨 Vanguard blokkerer:", ip);
@@ -113,8 +114,8 @@ export const vanguard = {
 
         if (vanguard.requestCounts[ip] > vanguard.blacklistThreshold) {
           vanguard.blacklistedIPs.add(ip);
-          vanguard.logEvent(
-            ip,"🪓 BAN","IP BLACKLISTED FOR DDoS",req.url);
+          vanguard.manageBlacklist("save");
+          vanguard.logEvent(ip,"🪓 BAN","IP BLACKLISTED FOR DDoS",req.url);
           res.status(HTTP_CODES.CLIENT_ERROR.TOO_MANY_REQUESTS).send("Vanguard: Too many requests! You are permanently banned");
           vanguard.attackEnemy(req.url);
           return false;
@@ -164,9 +165,6 @@ export const vanguard = {
   },
 
   manageBlacklist(action, data = null) {
-
-    console.log(`📢 Vanguard sender melding til worker: ${action}`);
-
     const blacklistWorker = new Worker(new URL("../workers/blacklistWorker.mjs", import.meta.url));
   
     if (action === "load") {
@@ -181,12 +179,22 @@ export const vanguard = {
     }
   
     if (action === "save") {
+      console.log("📩 Vanguard sender melding til worker: save");
       blacklistWorker.postMessage({ type: "save", data: [...vanguard.blacklistedIPs] });
-      console.log("Vanguard: Blacklist saved.");
+    
+      blacklistWorker.on("message", (msg) => {
+        if (msg.type === "saved") {
+          console.log("✅ Vanguard bekreftet at blacklist.json er lagret!");
+        }
+      });
     }
   },
 };
 
 vanguard.manageBlacklist("load");
 
-process.on("exit", () => vanguard.manageBlacklist("save"));
+process.on("SIGINT", () => {
+  console.log("📋 Innhold i blacklistedIPs før lagring:", [...vanguard.blacklistedIPs]);
+  vanguard.manageBlacklist("save");
+  process.exit();
+});
