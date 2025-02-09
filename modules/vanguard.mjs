@@ -164,7 +164,7 @@ export const vanguard = {
   },
 
   manageBlacklist(action, data = null) {
-    
+
     console.log(`📢 Vanguard sender melding til worker: ${action}`);
 
     const blacklistWorker = new Worker(new URL("../workers/blacklistWorker.mjs", import.meta.url));
@@ -175,14 +175,14 @@ export const vanguard = {
       blacklistWorker.on("message", (msg) => {
         if (msg.type === "loaded") {
           vanguard.blacklistedIPs = new Set(msg.data);
-          console.log("✅ Vanguard: Blacklist loaded.");
+          console.log("Vanguard: Blacklist loaded.");
         }
       });
     }
   
     if (action === "save") {
       blacklistWorker.postMessage({ type: "save", data: [...vanguard.blacklistedIPs] });
-      console.log("📂 Vanguard: Blacklist saved.");
+      console.log("Vanguard: Blacklist saved.");
     }
   },
 };
