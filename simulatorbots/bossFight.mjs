@@ -10,41 +10,21 @@ let bossFightInterval = null;
 let overlordInterval = null;
 
 const server = {
-  simulateAttack(attack, attacker) {
+  simulateAttack(attacker) {
     if (!attacker) {
-      console.error("🚨 Error: Undefined attacker in simulateAttack!", attack);
+      console.error("🚨 Error: Undefined attacker in simulateAttack!");
       return;
     }
 
     if (attacker.hp <= 0) {
-      console.log(
-        `☠️ ${attacker.name} has been defeated and will no longer attack!`
-      );
+      console.log(`☠️ ${attacker.name} has been defeated and will no longer attack!`);
       return;
     }
 
-    console.log(`🚨 [${attacker.name} Attack] ${attack}`);
+    console.log("🔥 Debug: Attacker object ->", attacker);
+    console.log(`⚔️ ${attacker.name} is attacking!`);
 
-    const fakeReq = { ip: "66.66.66.66", url: attack };
-    const fakeRes = {
-      status: (code) => {
-        console.log(`⚠️ Vanguard responds with HTTP ${code}`);
-        return fakeRes;
-      },
-      send: (message) => console.log(`📢 Vanguard says: ${message}`),
-    };
-
-    vanguard.skills.forEach((skill) => {
-      if (!attacker.isDefeated) {
-        skill.use(fakeReq, fakeRes);
-      }
-    });
-
-    if (attacker.hp <= 0) {
-      attacker.isDefeated = true;
-      console.log(`☠️ ${attacker.name} has been slain by Vanguard!`);
-      activeEnemies = activeEnemies.filter((enemy) => enemy.hp > 0);
-    }
+    attacker.attack(server);
 
     attackCount++;
 
@@ -53,7 +33,7 @@ const server = {
 
       overlordInterval = setInterval(() => {
         if (cyberDemonOverlord.hp > 0) {
-          cyberDemonOverlord.attack(server, cyberDemonOverlord);
+          cyberDemonOverlord.attack(server);
         } else {
           console.log("💀 OVERLORD ZERO HAS BEEN VANQUISHED!");
           clearInterval(overlordInterval);
@@ -77,7 +57,7 @@ function startBossFight() {
 
     activeEnemies.forEach((enemy) => {
       if (enemy.hp > 0) {
-        enemy.attack(server);
+        server.simulateAttack(enemy);
       }
     });
   }, 3000);

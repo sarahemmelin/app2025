@@ -7,7 +7,7 @@ import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
 import { vanguard } from './modules/vanguard.mjs';
-import { startBossFight } from './tests/bossFight.mjs';
+import { startBossFight } from './simulatorbots/bossFight.mjs';
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +16,8 @@ const logger = log(LOGG_LEVELS.VERBOSE);
 
 
 server.set('port', port);
+
+server.use(express.json());
 
 server.use((req, res, next) => {
     for (const skill of vanguard.skills) {
@@ -30,9 +32,8 @@ server.use((req, res, next) => {
 server.use(logger);
 server.get("/", serveDeckPage); 
 server.use(express.static('public/DeckOfCards'));
-server.use(express.json());
 
-server.use('/temp', deckRoutes);
+server.use('/', deckRoutes);
 server.use('/tmp', poetryRoutes);
 
 
@@ -40,7 +41,7 @@ server.use('/tmp', poetryRoutes);
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log("VANGUARD IS READY TO DEFEND!");
-    startBossFight();
+    // startBossFight();
 });
 
 

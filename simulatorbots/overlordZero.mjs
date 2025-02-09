@@ -1,11 +1,11 @@
 export const cyberDemonOverlord = {
     name: "Overlord Zero",
     description: "A terrifying AI entity that evolves its attack patterns to breach defenses.",
-    phase: 1, 
+    phase: 1,
     attackCount: 0,
     defeated: false,
     hp: 100,
-
+    
     attackPatterns: [
         {
             name: "Phase 1: Testing the Waters",
@@ -24,7 +24,7 @@ export const cyberDemonOverlord = {
                 "/ping",
                 "/status?overload"
             ],
-            spamRate: 50
+            spamRate: 20
         },
         {
             name: "Phase 3: The Grand Combo",
@@ -47,23 +47,20 @@ export const cyberDemonOverlord = {
                 "/status?overload",
                 "/admin/../../../etc/passwd"
             ],
-
-            // **HER ER MUTASJONSFUNKSJONEN**
             mutate(attack) {
                 const mutations = [
-                    attack + " AND 1=1 --", // Legger til SQL-angrep
-                    attack.replace(/select|union|script/gi, "███"), // Sensurerer noen ord
-                    encodeURIComponent(attack), // URL-enkoder angrepet for å skjule det bedre
-                    attack.split("").reverse().join(""), // Speilvender strengen (obfuskering)
-                    attack.replace(/\//g, "\\") // Bytter ut / med \ for å prøve å forvirre systemet
+                    attack + " AND 1=1 --",
+                    attack.replace(/select|union|script/gi, "███"),
+                    encodeURIComponent(attack),
+                    attack.split("").reverse().join(""),
+                    attack.replace(/\//g, "\\")
                 ];
-                
                 return mutations[Math.floor(Math.random() * mutations.length)];
             }
         }
     ],
 
-    attack(server, attacker = this) {
+    attack(server) {
         if (this.hp <= 0) {
             console.log("💀 OVERLORD ZERO HAS BEEN VANQUISHED!");
             return;
@@ -72,30 +69,26 @@ export const cyberDemonOverlord = {
         const pattern = this.attackPatterns[this.phase - 1];
         console.log(`🔥 Overlord Zero initiates: ${pattern.name} 🔥`);
 
-        for (let i = 0; i < pattern.attacks.length; i++) {
-            let attack = pattern.attacks[i];
-
-            if (this.phase === 4 && typeof pattern.mutate === "function") {
-                attack = pattern.mutate(attack);
-                pattern.attacks[i] = attack;
-            }
-
-            console.log(`👹 Overlord Zero attacks with: ${attack}`);
-            server.simulateAttack(attack, attacker);
-        }
+        pattern.attacks.forEach((attack, index) => {
+            setTimeout(() => {
+                if (this.phase === 4 && typeof pattern.mutate === "function") {
+                    attack = pattern.mutate(attack);
+                    if (server.detectMutation(attack)) {
+                        console.log("🛑 Vanguard detected a mutated attack! Blocking request.");
+                        return;
+                    }
+                }
+                console.log(`👹 Overlord Zero attacks with: ${attack}`);
+                server.simulateAttack(attack, this);
+            }, index * 500); 
+        });
 
         this.attackCount++;
 
-        if (this.attackCount > 10 && this.phase < 4) {
+        if (this.attackCount >= 10 && this.phase < 4) {
             console.log(`⚠️ Overlord Zero evolves to Phase ${this.phase + 1}!`);
             this.phase++;
-        }
-
-        if (this.phase === 4) {
-            console.log("🛠 Overlord Zero mutates its attack strategy!");
-            for (let i = 0; i < pattern.attacks.length; i++) {
-                pattern.attacks[i] = pattern.mutate ? pattern.mutate(pattern.attacks[i]) : pattern.attacks[i];
-            }
+            this.attackCount = 0;
         }
     },
 

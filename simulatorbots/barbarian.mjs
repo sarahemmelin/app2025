@@ -8,7 +8,13 @@ export const barbarian = {
     attack(server) {
         if (this.hp <= 0) return;
         console.log(`🪓 [Barbarian Attack] ${this.attackPath}`);
-        server.simulateAttack(this.attackPath, this.name);
+        
+        setTimeout(() => {
+            if (this.hp > 0) {
+                console.log(`⚔️ Barbarian prepares next attack...`);
+                server.simulateAttack(this);
+            }
+        }, 2000);
     },
 
     takeDamage() {
@@ -17,7 +23,7 @@ export const barbarian = {
 
         if (this.hp <= 0) {
             console.log(`☠️ Barbarian has been crushed by Vanguard!`);
-            clearInterval(this.attackInterval); 
+            clearInterval(this.attackInterval);
         }
     }
 };
