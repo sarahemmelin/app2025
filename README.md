@@ -60,6 +60,8 @@ Middlewaren skal filtrere ut ondsinnet trafikk mot serveren.
 1. Research.
 2. Filstruktur.
 3. Hva starter vi med? 
-  - Middleware-filen, la oss kalle den "vanguard.mjs"
-  - 
-4. 
+  - Middleware-filen, la oss kalle den "vanguard.mjs", skal beskytte mot angrep.
+  - Noe må simulere angrep og teste middlewaren.
+4. Det har blitt til en RPG - greie dette.
+  - Simulator - bot'sene prompter vi en AI til å lage slik at de angriper serveren.
+  - Oppdatering: Bossen kræsjer serveren min fordi den også opptar minne på PCEN min og den muterer slik at den teknisk sett aldri får stoppet før den er "død". Dette er ikke slik det ville fungert på ordentlig, men vi videreutvikler underveis. 
