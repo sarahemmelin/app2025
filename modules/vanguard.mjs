@@ -1,10 +1,10 @@
 import ReadableTime from "../utils/translateTime.mjs";
 import { Worker } from "node:worker_threads";
 import HTTP_CODES from "../utils/httpCodes.mjs";
-import { thief } from "../simulatorbots/thief.mjs";
-import { barbarian } from "../simulatorbots/barbarian.mjs";
-import { assassin } from "../simulatorbots/assassin.mjs";
-import { cyberDemonOverlord } from "../simulatorbots/overlordZero.mjs";
+// import { thief } from "../simulatorbots/thief.mjs";
+// import { barbarian } from "../simulatorbots/barbarian.mjs";
+// import { assassin } from "../simulatorbots/assassin.mjs";
+// import { cyberDemonOverlord } from "../simulatorbots/overlordZero.mjs";
 
 
 export const vanguard = {
@@ -33,16 +33,13 @@ export const vanguard = {
       description: "Blocks known blacklisted IPs with his 403-shield.",
       use(req, res) {
         const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
-        console.log(`🚨 Checking if ${ip} is blacklisted:`, vanguard.blacklistedIPs);
 
     if (vanguard.blacklistedIPs.has(ip)) {
-        console.log("🚨 Vanguard blokkerer:", ip);
         res.status(403).send("Vanguard: Access Denied!");
         return false;
     }
 
         if (vanguard.blacklistedIPs.has(ip)) {
-          console.log("Vanguard blokkerer:", ip);
           res.status(403).send("Vanguard: Access Denied!");
           return false;
       }
@@ -50,7 +47,7 @@ export const vanguard = {
 
         const subnet = ip.split(".").slice(0, 2).join(".") + ".*.*";
         if (vanguard.blacklistedIPs.has(ip) || vanguard.blacklistedSubnets.has(subnet)) {
-          vanguard.logEvent(ip, "🕵️ Thief", "BLACKLISTED", req.url);
+          vanguard.logEvent(ip, "🕵️ A Thief", "BLACKLISTED", req.url);
           res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Access Denied!");
           vanguard.attackEnemy(req.url);
           return false;
@@ -59,7 +56,7 @@ export const vanguard = {
         const dataToCheck = [req.url,JSON.stringify(req.query), JSON.stringify(req.body), JSON.stringify(req.headers),];
         for (const pattern of vanguard.dangerousPatterns) {
           if (dataToCheck.some((field) => pattern.test(field))) {
-            vanguard.logEvent(ip,"🕵️ Thief","MALICIOUS PATTERN DETECTED",req.url);
+            vanguard.logEvent(ip,"🕵️ A Thief","MALICIOUS PATTERN DETECTED",req.url);
             res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Malicious request blocked!");
             vanguard.attackEnemy(req.url);
             return false;
@@ -105,11 +102,9 @@ export const vanguard = {
       }
       vanguard.requestCounts[ip] += 1;
 
-        console.log(`📊 Vanguard request count for ${ip}: ${vanguard.requestCounts[ip]}`);
-
         if (vanguard.requestCounts[ip] > vanguard.DDOS_threshold) {
           vanguard.logEvent(
-            ip, "🪓 Barbarian","HIGH REQUEST RATE DETECTED",req.url);
+            ip, "🪓 A Barbarian","HIGH REQUEST RATE DETECTED",req.url);
         }
 
         if (vanguard.requestCounts[ip] > vanguard.blacklistThreshold) {
@@ -144,21 +139,20 @@ export const vanguard = {
     },
   ],
 
-  attackEnemy(url) {
-    if (url.includes(thief.attackPath)) {
-      thief.takeDamage();
-    } else if (url.includes(assassin.attackPath)) {
-      assassin.takeDamage();
-    } else if (url.includes(barbarian.attackPath)) {
-      barbarian.takeDamage();
-    } else {
-      cyberDemonOverlord.takeDamage();
-    }
-  },
+  // attackEnemy(url) {
+  //   if (url.includes(thief.attackPath)) {
+  //     thief.takeDamage();
+  //   } else if (url.includes(assassin.attackPath)) {
+  //     assassin.takeDamage();
+  //   } else if (url.includes(barbarian.attackPath)) {
+  //     barbarian.takeDamage();
+  //   } else {
+  //     cyberDemonOverlord.takeDamage();
+  //   }
+  // },
 
   logEvent(ip, enemy, reason, url) {
     const logStatement = `[${ReadableTime}] ⚔️ ${enemy} attacked from ${ip}! Reason: ${reason}, Target: ${url}`;
-    console.log("⚔️ Vanguard Log:", logStatement);
 
     const scribe = new Worker(new URL("../workers/scribe.mjs", import.meta.url));
     scribe.postMessage({ logStatement });
@@ -179,12 +173,10 @@ export const vanguard = {
     }
   
     if (action === "save") {
-      console.log("📩 Vanguard sender melding til worker: save");
       blacklistWorker.postMessage({ type: "save", data: [...vanguard.blacklistedIPs] });
     
       blacklistWorker.on("message", (msg) => {
         if (msg.type === "saved") {
-          console.log("✅ Vanguard bekreftet at blacklist.json er lagret!");
         }
       });
     }

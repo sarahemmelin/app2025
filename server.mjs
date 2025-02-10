@@ -7,9 +7,12 @@ import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
 import { vanguard } from './modules/vanguard.mjs';
-import { startBossFight } from './simulatorbots/bossFight.mjs';
+// import { startBossFight } from './simulatorbots/bossFight.mjs';
 import { updateSession } from './modules/session.mjs';
 import { startSession } from './modules/session.mjs';
+import { treeRouter } from './routes/treeAPI.mjs';
+import { questLogRouter } from './routes/questLogAPI.mjs';  
+import { userRouter } from './routes/userAPI.mjs';
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -35,6 +38,10 @@ server.use(startSession);
 server.use(logger);
 server.get("/", serveDeckPage); 
 server.use(express.static('public/DeckOfCards'));
+server.use("/tree/", treeRouter);
+//.../tree/ blir plukket opp av treeRouter.
+server.use("/quest/", questLogRouter);
+server.use("/user/", userRouter);
 
 server.use('/', deckRoutes);
 server.use('/tmp', poetryRoutes);
@@ -44,7 +51,7 @@ server.use('/tmp', poetryRoutes);
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log("VANGUARD IS READY TO DEFEND!");
-    // startBossFight();
+    // startBossFight(); Denne fungerer ikke atm. 
 });
 
 
