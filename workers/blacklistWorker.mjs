@@ -12,7 +12,6 @@ async function saveBlacklist(blacklistedIPs) {
         await fs.writeFile(BLACKLIST_FILE, jsonData);
         console.log("✅ [Blacklist Worker] Lagret blacklist.json!");
 
-        // ✨ Send bekreftelse tilbake til Vanguard
         parentPort.postMessage({ type: "saved" });
 
     } catch (error) {

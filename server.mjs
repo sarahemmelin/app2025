@@ -8,6 +8,8 @@ import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
 import { vanguard } from './modules/vanguard.mjs';
 import { startBossFight } from './simulatorbots/bossFight.mjs';
+import { updateSession } from './modules/session.mjs';
+import { startSession } from './modules/session.mjs';
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -28,7 +30,8 @@ server.use((req, res, next) => {
     next();
 });
 
-
+server.use(updateSession);
+server.use(startSession);
 server.use(logger);
 server.get("/", serveDeckPage); 
 server.use(express.static('public/DeckOfCards'));
