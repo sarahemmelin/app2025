@@ -60,3 +60,5 @@ function serveDeckPage(req, res) {
     eventLogger("Serving deck page");
     res.sendFile(path.resolve('public/DeckOfCards/index.html'));
 }
+
+export { server };  
