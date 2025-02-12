@@ -1,0 +1,32 @@
+{
+    "data": "data",
+    "connections": [
+       {
+          "data": "A",
+          "connections": [
+             {
+                "data": "A1",
+                "connections": []
+             },
+             {
+                "data": "A2",
+                "connections": []
+             }
+          ]
+       },
+       {
+          "data": "B",
+          "connections": [
+             {
+                "data": "B1",
+                "connections": []
+             },
+             {
+                "data": "B2",
+                "connections": []
+             }
+          ]
+       }
+    ]
+ }
+ 
