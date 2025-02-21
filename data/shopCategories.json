@@ -1,0 +1,17 @@
+{
+    "Maling": {
+        "Gouache": {
+            "Acrylic Gouache": {}
+        },
+        "Akvarell": {},
+        "Poster Paint": {}
+    },
+    "Tusjer": {
+        "Alkoholtusj": {},
+        "Vannbasert Tusj": {}
+    },
+    "Papir": {
+        "Akvarellpapir": {},
+        "Markerpapir": {}
+    }
+}
