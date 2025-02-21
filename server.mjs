@@ -2,6 +2,7 @@
 
 import express from 'express';
 import path from 'path';
+import shopAPI from './routes/shopAPI.mjs';
 import deckRoutes from './routes/deckRoutes.mjs';
 import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
@@ -33,6 +34,7 @@ server.use((req, res, next) => {
     next();
 });
 
+server.use("/shop/", shopAPI);
 server.use(updateSession);
 server.use(startSession);
 server.use(logger);
@@ -41,10 +43,10 @@ server.use(express.static('public/DeckOfCards'));
 server.use("/tree/", treeRouter);
 
 server.use("/quest/", questLogRouter);
-server.use("/user/", userRouter);
+server.use("/user/", userRouter); //Fra forelesning
 
-server.use('/', deckRoutes);
-server.use('/tmp', poetryRoutes);
+// server.use('/', deckRoutes);
+// server.use('/tmp', poetryRoutes);
 
 
 
