@@ -65,3 +65,27 @@ Middlewaren skal filtrere ut ondsinnet trafikk mot serveren.
 4. Det har blitt til en RPG - greie dette.
   - Simulator - bot'sene prompter vi en AI til å lage slik at de angriper serveren.
   - Oppdatering: Bossen kræsjer serveren min fordi den også opptar minne på PCEN min og den muterer slik at den teknisk sett aldri får stoppet før den er "død". Dette er ikke slik det ville fungert på ordentlig, men vi videreutvikler underveis. 
+
+
+
+Innlevering: Datastrukturer
+Idé:
+1. Lage samme datastruktur som vi har sett på i klassen men med muligheten for å kombinere interesser og få opp mer spesifikke og innsnevrede yrker. 
+2. Lage et filter som filtrerer varer man søker opp. F.eks. i et bibliotek.
+3. Lage baksystemet til en nettbutikk som selger produkter for klassisk illustrasjon. 
+
+Datastrukturer som (muligens) er godt egnet til oppgavene: 
+1. Her har vi brukt et tre, men vi måtte hatt en måte å filtrere dette på. Så et tre + en hashmap.
+2. En hashmap.
+3. Dette er et mer komplekst system hvis vi skal lage alt, så her bruker vi kanskje hashmap for produkter og lagerstyring? og lister for bestillinger (fordi her må vi faktisk ha et kø-system). 
+
+Valg: 
+3. Baksystem til en nettbutikk. 
+Teoretiske problemer:
+[]  En Hashmap er effektiv fordi man kan gjøre ekstremt raske søk på id'er, fordi det har konstant oppslagstid 0(1), fordi man slår opp nøkkelen i objektet direkte. 
+    En Hashmap er bare effektiv når man slår opp nøkkelen og vil bli treigere hvis vi søker etter produktnavnet inne i objektet, fordi vi da må iterere gjennom hele objektet. Dette er en O(n).
+    Dette vil si at når vi mennesker skal slå opp et produkt så går ikke vi rundt og husker unike id'er på produkter, og må søke opp produkter på navn.
+Løsning: 
+[]  Vi kan lage en ekstra hashmap basert på navn, altså hvor navnet er nøkkelen og på den måten kan vi finne id'en til produkt- hashMapen.
+    Denne metoden skaper et nytt problem, altså sletting av produkter. Vi ønsker ikke å måtte slette produktet fra 2 hashMaps og må derfor implementere slettingen i en funksjon som gjør at 
+    vi kan slette produktet fra alle steder det måtte trengs å slettes ifra. Spørsmålet til slutt er, er dette så effektivt da? 
