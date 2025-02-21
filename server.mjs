@@ -39,7 +39,7 @@ server.use(logger);
 server.get("/", serveDeckPage); 
 server.use(express.static('public/DeckOfCards'));
 server.use("/tree/", treeRouter);
-//.../tree/ blir plukket opp av treeRouter.
+
 server.use("/quest/", questLogRouter);
 server.use("/user/", userRouter);
 
