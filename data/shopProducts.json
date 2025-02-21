@@ -1,0 +1,22 @@
+{
+    "1": {
+        "id": "1",
+        "sku": "HOLB-AG-RED",
+        "navn": "Holbein Acrylic Gouache",
+        "kategori": ["Maling", "Gouache", "Acrylic Gouache"],
+        "pris": 149.90,
+        "lager": 25,
+        "farge": "Rød",
+        "pigment": "PR254"
+    },
+    
+    "2": {
+        "id": "2",
+        "sku": "COP-SK-BLUE",
+        "navn": "Copic Sketch Marker",
+        "kategori": ["Tusjer", "Alkoholtusj"],
+        "pris": 79.90,
+        "lager": 50,
+        "farge": "Blå"
+    }
+}
