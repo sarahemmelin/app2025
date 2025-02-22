@@ -3,8 +3,8 @@
 import express from 'express';
 import path from 'path';
 import shopAPI from './routes/shopAPI.mjs';
-import deckRoutes from './routes/deckRoutes.mjs';
-import poetryRoutes from './routes/poetryRoutes.mjs';
+// import deckRoutes from './routes/deckRoutes.mjs';
+// import poetryRoutes from './routes/poetryRoutes.mjs';
 import log from './modules/log.mjs';
 import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
 import { vanguard } from './modules/vanguard.mjs';
