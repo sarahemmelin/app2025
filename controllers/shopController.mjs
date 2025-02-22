@@ -24,3 +24,23 @@ export async function getProduct(req, res) {
         res.status(500).json({ message: "Error reading product", error });
     }
 }
+
+export async function createProduct(req, res) {
+    try {
+        const {
+            navn, 
+            kategori, 
+            pris,
+            lager, 
+            farge,
+            pigment,
+            sku
+            } = req.body;
+
+            const fileData = await fs.readFile(filePath, "utf-8");
+            const products = JSON.parse(fileData);
+
+        } catch (error) {
+            res.status(500).json({ message: "Error creating product", error });
+        }
+    }
