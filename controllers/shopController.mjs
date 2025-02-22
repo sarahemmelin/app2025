@@ -25,6 +25,7 @@ export async function getProduct(req, res) {
     }
 }
 
+let nextId = 4;
 export async function createProduct(req, res) {
     try {
         const {
@@ -34,11 +35,28 @@ export async function createProduct(req, res) {
             lager, 
             farge,
             pigment,
+            beskrivelse,
             sku
             } = req.body;
 
             const fileData = await fs.readFile(filePath, "utf-8");
             const products = JSON.parse(fileData);
+
+            const newId = String(nextId++);
+            products[newId] = {
+                navn,
+                kategori,
+                pris,
+                lager,
+                farge,
+                pigment,
+                beskrivelse,
+                sku
+            };
+
+            if (pigment) produkter[newId].pigment = pigment;
+            if (sku) produkter[newId].sku = sku;
+            if (beskrivelse) produkter[newId].beskrivelse = beskrivelse;
 
         } catch (error) {
             res.status(500).json({ message: "Error creating product", error });
