@@ -58,7 +58,13 @@ export async function createProduct(req, res) {
             if (sku) produkter[newId].sku = sku;
             if (beskrivelse) produkter[newId].beskrivelse = beskrivelse;
 
+            await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+            res.status(201).json({ message: `Produkt '${navn}' lagt til`, produkt: produkter[nyId] });
+
         } catch (error) {
-            res.status(500).json({ message: "Error creating product", error });
+            res.status(500).json({ message: "Feil ved lagring av produkt", error });
         }
     }
+
+
+    
