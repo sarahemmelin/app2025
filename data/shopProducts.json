@@ -7,7 +7,9 @@
         "pris": 149.90,
         "lager": 25,
         "farge": "Rød",
-        "pigment": "PR254"
+        "pigment": "PR254",
+        "beskrivelse": "Holbein er en japansk produsent av kunstnermateriell. Acrylic Gouache er en type maling som kombinerer egenskapene til akrylmaling og gouache."
+                        
     },
     
     "2": {
@@ -17,6 +19,7 @@
         "kategori": ["Tusjer", "Alkoholtusj"],
         "pris": 79.90,
         "lager": 50,
-        "farge": "Blå"
+        "farge": "Blå",
+        "beskrivelse": "Copic Sketch er en profesjonell alkoholtusj med to spisser. Den ene spissen er en bred kilespiss, mens den andre er en fin spiss."
     }
 }
