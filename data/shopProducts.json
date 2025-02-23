@@ -26,5 +26,18 @@
     "lager": 50,
     "farge": "Blå",
     "beskrivelse": "Copic Sketch er en profesjonell alkoholtusj med to spisser. Den ene spissen er en bred kilespiss, mens den andre er en fin spiss."
+  },
+  "3": {
+    "id": "3",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "En test av API-n�kkelvalidering"
   }
 }
