@@ -30,30 +30,69 @@ export const vanguard = {
   skills: [
     {
       name: "Cleanse", 
-      description: "Sanitizes user input to prevent SQL/XSS attacks.",
+      description: "Sanitizes user input and headers to prevent SQL/XSS attacks.",
       use(req, res) {
         const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
+        console.log("[Vanguard Debug] Full headers dump:", JSON.stringify(req.headers, null, 2));
+
         const dataToCheck = [
           JSON.stringify(req.query),
           JSON.stringify(req.body),
           JSON.stringify(req.headers),
         ];
-
+    
         for (const pattern of vanguard.dangerousPatterns) {
           if (dataToCheck.some((field) => pattern.test(field))) {
-            console.warn(`Vanguard: Malicious request blocked from ${ip} !`);
+            console.warn(`Vanguard: Malicious request blocked from ${ip}!`);
             vanguard.logEvent(ip, "🕵️ A Thief", "MALICIOUS PATTERN DETECTED", req.url);
             res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Malicious request blocked!");
             return false;
           }
         }
-
+    
         for (const key in req.body) {
-        req.body[key] = sanitizeHtml(req.body[key]);
+          if (typeof req.body[key] === "string") {
+            req.body[key] = sanitizeHtml(req.body[key]);
+    
+            if (/DROP\s+TABLE|INSERT\s+INTO|DELETE\s+FROM|SELECT\s+\*|UPDATE\s+\w+\s+SET/i.test(req.body[key])) {
+              console.warn(`Vanguard: Blocked potential SQL attack from ${ip}!`);
+              vanguard.logEvent(ip, "A Hacker", "SQL ATTEMPT DETECTED", req.url);
+              res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Suspicious activity detected!");
+              return false;
+            }
+          } else {
+            console.warn(`Vanguard Warning: Expected string for ${key}, received ${typeof req.body[key]}`);
+          }
         }
+    
+        for (const key in req.headers) {
+          if (typeof req.headers[key] === "string") {
+            let sanitizedHeader = sanitizeHtml(req.headers[key]);
+    
+            if (/(<script[\s\S]*?>[\s\S]*?<\/script>|javascript:|onerror=|onload=|alert\(|document\.cookie)/i.test(req.headers[key])) {
+              console.warn(`Vanguard: Blocked potential XSS attack in headers from ${ip}! Header: ${key}`);
+              vanguard.logEvent(ip, "👺 A Hacker", `MALICIOUS HEADER DETECTED (${key})`, req.url);
+              res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Suspicious activity detected!");
+              return false;
+            }
+    
+            req.headers[key] = sanitizedHeader;
+          } else {
+            console.warn(`Vanguard Warning: Expected string for header ${key}, received ${typeof req.headers[key]}`);
+          }
+        }
+    
+    const userAgent = req.headers["user-agent"];
+    if (userAgent && /(<script>|<\/script>|javascript:|onerror=|onload=|alert\()/i.test(userAgent)) {
+      console.warn(`[Vanguard] XSS Blocked: Suspicious User-Agent detected from ${ip}!`);
+      vanguard.logEvent(ip, "🚨 XSS ATTACK", "User-Agent header contained script", req.url);
+      res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Suspicious activity detected!");
+      return false;
+    }
+    
         return true;
       }
-    },
+    },    
     {
       //TODO: 
       // 1. Vanguard should save the IP address of the attacker and log it.

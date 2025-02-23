@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.get("/", getAllProducts);
 router.get("/:id", getProduct);
-router.post("/", authenticateAPIKey, (req, res, next) => {
+router.post("/", (req, res, next) => {
     if (vanguard.skills[0].use(req, res)) next();
-  }, createProduct);
+  }, authenticateAPIKey, createProduct);
 router.delete("/:id", authenticateAPIKey, deleteProduct);
 
 export default router;
