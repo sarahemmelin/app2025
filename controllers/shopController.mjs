@@ -15,6 +15,7 @@ export async function getProduct(req, res) {
     try {
         const fileData = await fs.readFile(filePath, "utf-8");
         const products = JSON.parse(fileData);
+
         const product = products[req.params.id];
 
         if (!product) return res.status(404).json({ message: "Produkt ikke funnet" });
@@ -59,12 +60,38 @@ export async function createProduct(req, res) {
             if (beskrivelse) produkter[newId].beskrivelse = beskrivelse;
 
             await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-            res.status(201).json({ message: `Produkt '${navn}' lagt til`, produkt: produkter[nyId] });
+            res.status(201).json({ message: `Produkt '${navn}' lagt til`, produkt: produkter[newId] });
 
         } catch (error) {
             res.status(500).json({ message: "Feil ved lagring av produkt", error });
         }
     }
 
+export async function deleteProduct(req, res) {
+    try {
+        const { id } = req.params;
 
-    
+        const fileData = await fs.readFile(filePath, "utf-8");
+        const products = JSON.parse(fileData);
+
+        if (!products[id]) return res.status(404).json({ message: "Produkt ikke funnet" });
+
+        delete products[id];
+
+        await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+        res.json({ message: `Produkt med id ${id} slettet` });
+    } catch (error) {
+        res.status(500).json({ message: "Feil ved sletting av produkt", error });
+    }
+}
+
+const getfileData = async (filePath) => {
+    try {
+        const fileData = await fs.readFile(filePath, "utf-8");
+        return JSON.parse(fileData);
+    } catch (error) {
+        return {
+            
+        };
+    }
+}
