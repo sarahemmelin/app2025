@@ -1,19 +1,19 @@
 'use strict';
 
 import express from 'express';
-import path from 'path';
+// import path from 'path';
 import shopAPI from './routes/shopAPI.mjs';
 // import deckRoutes from './routes/deckRoutes.mjs';
 // import poetryRoutes from './routes/poetryRoutes.mjs';
-import log from './modules/log.mjs';
-import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
-import { vanguard } from './modules/vanguard.mjs';
+// import log from './modules/log.mjs';
+// import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
+// import { vanguard } from './modules/vanguard.mjs';
 // import { startBossFight } from './simulatorbots/bossFight.mjs';
-import { updateSession } from './modules/session.mjs';
-import { startSession } from './modules/session.mjs';
-import { treeRouter } from './routes/treeAPI.mjs';
-import { questLogRouter } from './routes/questLogAPI.mjs';  
-import { userRouter } from './routes/userAPI.mjs';
+// import { updateSession } from './modules/session.mjs';
+// import { startSession } from './modules/session.mjs';
+// import { treeRouter } from './routes/treeAPI.mjs';
+// import { questLogRouter } from './routes/questLogAPI.mjs';  
+// import { userRouter } from './routes/userAPI.mjs';
 
 const server = express();
 server.use(express.json());
@@ -35,6 +35,10 @@ server.set('port', port);
 // });
 
 server.use("/shop/", shopAPI);
+server.get("/", (req, res) => {
+    res.send("Gå til /shop for å hente produkter!");
+});
+
 // server.use(updateSession);
 // server.use(startSession);
 // server.use(logger);
