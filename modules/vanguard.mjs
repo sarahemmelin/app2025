@@ -1,6 +1,7 @@
 import ReadableTime from "../utils/translateTime.mjs";
 import { Worker } from "node:worker_threads";
 import HTTP_CODES from "../utils/httpCodes.mjs";
+import sanitizeHtml from "sanitize-html";
 // import { thief } from "../simulatorbots/thief.mjs";
 // import { barbarian } from "../simulatorbots/barbarian.mjs";
 // import { assassin } from "../simulatorbots/assassin.mjs";
@@ -15,7 +16,9 @@ export const vanguard = {
 
   blacklistedIPs: new Set(["192.168.1.100", "45.33.23.21"]),
   blacklistedSubnets: new Set(),
-  dangerousPatterns: [/<script>/i, /union select/i, /eval\(/i, /\.\.\//i],
+  requestCounts: {},
+  dangerousPatterns: [/<script>/i, /union select/i, /eval\(/i, /\.\.\//i, /(<script>|<\/script>)/gi, /\.\.\//gi,],
+  
   requestCounts: {},
   requestTimestamps: {},
   attackPatterns: new Map(),
@@ -25,6 +28,32 @@ export const vanguard = {
   timeWindow: 10000,
 
   skills: [
+    {
+      name: "Cleanse", 
+      description: "Sanitizes user input to prevent SQL/XSS attacks.",
+      use(req, res) {
+        const ip = req.headers["x-forwarded-for"] || req.ip || req.connection.remoteAddress;
+        const dataToCheck = [
+          JSON.stringify(req.query),
+          JSON.stringify(req.body),
+          JSON.stringify(req.headers),
+        ];
+
+        for (const pattern of vanguard.dangerousPatterns) {
+          if (dataToCheck.some((field) => pattern.test(field))) {
+            console.warn(`Vanguard: Malicious request blocked from ${ip} !`);
+            vanguard.logEvent(ip, "🕵️ A Thief", "MALICIOUS PATTERN DETECTED", req.url);
+            res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).send("Vanguard: Malicious request blocked!");
+            return false;
+          }
+        }
+
+        for (const key in req.body) {
+        req.body[key] = sanitizeHtml(req.body[key]);
+        }
+        return true;
+      }
+    },
     {
       //TODO: 
       // 1. Vanguard should save the IP address of the attacker and log it.
