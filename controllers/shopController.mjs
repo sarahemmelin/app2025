@@ -19,18 +19,13 @@ export async function getProduct(req, res) {
 
         res.json(product);
     } catch (error) {
-        res.status(500).json({ message: "Error reading product", error });
+        console.log("Feil ved henting av produkter", error);
+        res.status(500).json({ message: "Feil ved henting av produkter", error });
     }
 }
 
 export async function createProduct(req, res) {
     try {
-        console.log("Headers mottatt:", req.headers);
-
-        if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
-            console.log("Ugyldig eller manglende API-nøkkel");
-            return res.status(403).json({ message: "Ugyldig API-nøkkel" });
-        }
 
         const {
             navn, 
@@ -49,14 +44,12 @@ export async function createProduct(req, res) {
 
             
             const products = await getFileData(filePath);
-            console.log("Produkter hentet fra fil:", products);
             
             const existingIds = Object.keys(products);
             const idNumber = existingIds.map(id => Number(id));
             const highestId = Math.max(...idNumber);
 
             const newId = String(highestId + 1);
-            console.log("Ny id:", newId); 
 
             products[newId] = {
                 id: newId,
@@ -81,11 +74,6 @@ export async function createProduct(req, res) {
 
 export async function deleteProduct(req, res) {
     try {
-
-
-        if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
-            return res.status(403).json({ message: "Ugyldig API-nøkkel" });
-        }
 
         const { id } = req.params;
 

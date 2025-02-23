@@ -1,7 +1,9 @@
 export function authenticateAPIKey(req, res, next) {
-    const apiKey = req.header["x-api-key"];
-    if (apiKey !== process.env.API_KEY) {
-        return res.status(401).json({ message: "Ugyldig API-nøkkel." });
+    const requestId = Math.random().toString(36).substring(7);
+
+    if (req.headers["x-api-key"] !== process.env.API_KEY) {
+        return res.status(401).json({ message: "Ugyldig API-nøkkel." }); 
     }
+
     next();
 }
