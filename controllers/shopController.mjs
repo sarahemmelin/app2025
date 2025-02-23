@@ -23,7 +23,6 @@ export async function getProduct(req, res) {
     }
 }
 
-let nextId = 4;
 export async function createProduct(req, res) {
     try {
         const {
@@ -37,10 +36,19 @@ export async function createProduct(req, res) {
             sku
             } = req.body;
 
+            
             const products = await getFileData(filePath);
+            console.log("Produkter hentet fra fil:", products);
+            
+            const existingIds = Object.keys(products);
+            const idNumber = existingIds.map(id => Number(id));
+            const highestId = Math.max(...idNumber);
 
-            const newId = String(nextId++);
+            const newId = String(highestId + 1);
+            console.log("Ny id:", newId); 
+
             products[newId] = {
+                id: newId,
                 navn,
                 kategori,
                 pris,
@@ -52,10 +60,11 @@ export async function createProduct(req, res) {
             };
 
             await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-            res.status(201).json({ message: `Produkt '${navn}' lagt til`, produkt: produkter[newId] });
+            res.status(201).json({ message: `Produkt '${navn}' lagt til`, produkt: products[newId] });
 
         } catch (error) {
-            res.status(500).json({ message: "Feil ved lagring av produkt", error });
+            console.error("Feil ved lagring av produkt", error);
+            res.status(500).json({ message: "Feil ved lagring av produkt", error: error.message });
         }
     }
 
@@ -64,10 +73,8 @@ export async function deleteProduct(req, res) {
         const { id } = req.params;
 
         const products = await getFileData(filePath);
-        // const fileData = await fs.readFile(filePath, "utf-8");
-        // const products = JSON.parse(fileData);
 
-        if (!products[id]) return res.status(404).json({ message: "Produkt ikke funnet" });
+        if (!products[id]) return res.status(404).json({ message: `Produkt med ID ${id} ikke funnet` });
 
         delete products[id];
 
