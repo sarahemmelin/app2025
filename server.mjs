@@ -9,7 +9,7 @@ import shopAPI from './routes/shopAPI.mjs';
 // import poetryRoutes from './routes/poetryRoutes.mjs';
 // import log from './modules/log.mjs';
 // import { LOGG_LEVELS, eventLogger } from './modules/log.mjs';
-// import { vanguard } from './modules/vanguard.mjs';
+import { vanguard } from './modules/vanguard.mjs';
 // import { startBossFight } from './simulatorbots/bossFight.mjs';
 // import { updateSession } from './modules/session.mjs';
 // import { startSession } from './modules/session.mjs';
@@ -27,14 +27,14 @@ const port = process.env.PORT || 3000;
 server.set('port', port);
 
 
-// server.use((req, res, next) => {
-//     for (const skill of vanguard.skills) {
-//         if (!skill.use(req, res)) {
-//             return;
-//         }
-//     }
-//     next();
-// });
+server.use((req, res, next) => {
+    for (const skill of vanguard.skills) {
+        if (!skill.use(req, res)) {
+            return;
+        }
+    }
+    next();
+});
 
 server.use("/shop/", shopAPI);
 server.get("/", (req, res) => {
