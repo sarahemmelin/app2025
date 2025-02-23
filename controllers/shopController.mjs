@@ -25,6 +25,11 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
     try {
+
+        if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
+            return res.status(403).json({ message: "Ugyldig API-nøkkel" });
+        }
+        
         const {
             navn, 
             kategori, 
@@ -35,6 +40,10 @@ export async function createProduct(req, res) {
             beskrivelse,
             sku
             } = req.body;
+
+            if (!navn || !kategori || !pris || !lager || !farge || !pigment || !beskrivelse || !sku) {
+                return res.status(400).json({ message: "Mangler påkrevde felt" });
+            }
 
             
             const products = await getFileData(filePath);
@@ -49,14 +58,14 @@ export async function createProduct(req, res) {
 
             products[newId] = {
                 id: newId,
+                sku,
                 navn,
                 kategori,
                 pris,
-                lager,
-                farge,
-                pigment,
-                beskrivelse,
-                sku
+                lager: lager || 0,
+                farge: farge || "Ukjent",
+                pigment: pigment || "Ukjent",
+                beskrivelse: beskrivelse || "Ingen beskrivelse"
             };
 
             await fs.writeFile(filePath, JSON.stringify(products, null, 2));
