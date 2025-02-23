@@ -39,5 +39,200 @@
     "farge": "Gr�nn",
     "pigment": "PG7",
     "beskrivelse": "En test av API-n�kkelvalidering"
+  },
+  "4": {
+    "id": "4",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt - DROP TABLE shop --",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av SQL-injeksjon"
+  },
+  "5": {
+    "id": "5",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "6": {
+    "id": "6",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "7": {
+    "id": "7",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "8": {
+    "id": "8",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "9": {
+    "id": "9",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "10": {
+    "id": "10",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "11": {
+    "id": "11",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "12": {
+    "id": "12",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "13": {
+    "id": "13",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "14": {
+    "id": "14",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "15": {
+    "id": "15",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "16": {
+    "id": "16",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "17": {
+    "id": "17",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
+  },
+  "18": {
+    "id": "18",
+    "sku": "TEST-SKU",
+    "navn": "Test Produkt",
+    "kategori": [
+      "Maling"
+    ],
+    "pris": 99.9,
+    "lager": 10,
+    "farge": "Gr�nn",
+    "pigment": "PG7",
+    "beskrivelse": "Test av header-manipulasjon"
   }
 }
