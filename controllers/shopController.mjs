@@ -29,7 +29,7 @@ export async function createProduct(req, res) {
         if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
             return res.status(403).json({ message: "Ugyldig API-nøkkel" });
         }
-        
+
         const {
             navn, 
             kategori, 
@@ -41,7 +41,7 @@ export async function createProduct(req, res) {
             sku
             } = req.body;
 
-            if (!navn || !kategori || !pris || !lager || !farge || !pigment || !beskrivelse || !sku) {
+            if (!navn || !kategori || !pris || !sku) {
                 return res.status(400).json({ message: "Mangler påkrevde felt" });
             }
 
