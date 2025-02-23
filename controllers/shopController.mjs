@@ -79,6 +79,12 @@ export async function createProduct(req, res) {
 
 export async function deleteProduct(req, res) {
     try {
+
+
+        if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
+            return res.status(403).json({ message: "Ugyldig API-nøkkel" });
+        }
+
         const { id } = req.params;
 
         const products = await getFileData(filePath);
