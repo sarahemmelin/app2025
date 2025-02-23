@@ -25,8 +25,10 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
     try {
+        console.log("Headers mottatt:", req.headers);
 
         if (!req.headers['api_key'] || req.headers['api_key'] !== process.env.API_KEY) {
+            console.log("Ugyldig eller manglende API-nøkkel");
             return res.status(403).json({ message: "Ugyldig API-nøkkel" });
         }
 
