@@ -1,0 +1,11 @@
+{
+    "id": "string",
+    "sku": "string",
+    "navn": "string",
+    "kategori": ["string"],
+    "pris": "number",
+    "lager": "number",
+    "farge": "string",
+    "pigment": "string",
+    "beskrivelse": "string"
+  }
