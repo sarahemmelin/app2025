@@ -1,38 +1,55 @@
-const cacheID = "sienceV2";
+const cacheID = "Nettbutikken.no-v1";
 const contentToCache = [
+    "/",
     "/index.html",
+    "/offline.html",
     "/app.mjs",
-    "/icons/dragon.png",
-    "/icons/dragonLarge.png",
-    "/css/style.css",
-    "/API/knowledgeGraph"
+    // "/icons/small.png",
+    // "/icons/large.png",
+    "/css/style.css"
 ];
 
-self.addEventListener('install', (e) => {
-    console.log('[Service Worker] Install');
+self.addEventListener("install", async (e) => {
+    console.log("[Service Worker] Installerer");
     e.waitUntil((async () => {
         const cache = await caches.open(cacheID);
-        console.log('[Service Worker] Caching all: app shell and content');
+        console.log('[Service Worker] Lagrer alt i cache: app-skallet og innholdet');
         await cache.addAll(contentToCache);
     })());
 });
 
-self.addEventListener('fetch', (e) => {
-    // Cache http and https only, skip unsupported chrome-extension:// and file://...
-    if (!(
-        e.request.url.startsWith('http:') || e.request.url.startsWith('https:')
-    )) {
-        return;
-    }
+self.addEventListener("activate", async (e) => {
+    console.log("[Service Worker] Rydder opp gamle cacher...");
+    e.waitUntil((async () => {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+            cacheNames
+                .filter((name) => name !== cacheID)
+                .map((name) => caches.delete(name))
+        );
+    })());
+});
+
+self.addEventListener("fetch", async (e) => {
+    if (!e.request.url.startsWith("http")) return; 
 
     e.respondWith((async () => {
-        const r = await caches.match(e.request);
-        console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
-        if (r) { return r };
-        const response = await fetch(e.request);
-        const cache = await caches.open(cacheName);
-        console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-        cache.put(e.request, response.clone());
-        return response;
+        const cachedResponse = await caches.match(e.request);
+        if (cachedResponse) return cachedResponse;
+
+        try {
+            const response = await fetch(e.request);
+            if (!response || response.status !== 200 || response.type !== "basic") {
+                return response;
+            }
+
+            const responseClone = response.clone();
+            const cache = await caches.open(cacheID);
+            await cache.put(e.request, responseClone);
+
+            return response;
+        } catch (error) {
+            return await caches.match("/offline.html");
+        }
     })());
 });
