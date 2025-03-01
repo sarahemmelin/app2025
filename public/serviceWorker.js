@@ -3,7 +3,7 @@ const contentToCache = [
     "/",
     "/index.html",
     "/offline.html",
-    "/app.mjs",
+    "/js/app.mjs",
     // "/icons/small.png",
     // "/icons/large.png",
     "/css/style.css"
