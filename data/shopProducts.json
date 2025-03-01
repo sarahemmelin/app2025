@@ -1,56 +1,15 @@
 {
-    "1": {
-      "id": "1",
-      "sku": "HOLB-AG-RED",
-      "navn": "Holbein Acrylic Gouache",
-      "kategori": [
-        "Maling",
-        "Gouache",
-        "Acrylic Gouache"
-      ],
-      "pris": 149.9,
-      "lager": 25,
-      "farge": "Rød",
-      "pigment": "PR254",
-      "beskrivelse": "Holbein er en japansk produsent av kunstnermateriell. Acrylic Gouache er en type maling som kombinerer egenskapene til akrylmaling og gouache."
-    },
-    "2": {
-      "id": "2",
-      "sku": "COP-SK-BLUE",
-      "navn": "Copic Sketch Marker",
-      "kategori": [
-        "Tusjer",
-        "Alkoholtusj"
-      ],
-      "pris": 79.9,
-      "lager": 50,
-      "farge": "Blå",
-      "beskrivelse": "Copic Sketch er en profesjonell alkoholtusj med to spisser. Den ene spissen er en bred kilespiss, mens den andre er en fin spiss."
-    },
-    "3": {
-      "id": "3",
-      "sku": "TEST-SKU",
-      "navn": "Test Produkt",
-      "kategori": [
-        "Maling"
-      ],
-      "pris": 99.9,
-      "lager": 10,
-      "farge": "Gr�nn",
-      "pigment": "PG7",
-      "beskrivelse": "En test av API-n�kkelvalidering"
-    },
-    "4": {
-      "id": "4",
-      "sku": "TEST-SKU",
-      "navn": "Test Produkt - DROP TABLE shop --",
-      "kategori": [
-        "Maling"
-      ],
-      "pris": 99.9,
-      "lager": 10,
-      "farge": "Gr�nn",
-      "pigment": "PG7",
-      "beskrivelse": "Test av SQL-injeksjon"
-    }
+  "0": {
+    "id": "0",
+    "sku": "DUMMY-PROD",
+    "navn": "Dummy produkt (kan ikke slettes)",
+    "kategori": [
+      "Dummy"
+    ],
+    "pris": 0,
+    "lager": 100,
+    "farge": "Ukjent",
+    "pigment": "Ukjent",
+    "beskrivelse": "Dette er et dummy produkt som ikke kan slettes"
+  }
 }
