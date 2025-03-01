@@ -8,7 +8,7 @@ const contentToCache = [
     // "/icons/large.png",
     "/css/style.css"
 ];
-// await cache.addAll(contentToCache);
+
 self.addEventListener("install", async (e) => {
     console.log("[Service Worker] Installerer");
     e.waitUntil((async () => {
@@ -41,30 +41,24 @@ self.addEventListener("activate", async (e) => {
 });
 
 self.addEventListener("fetch", async (e) => {
-    if (!e.request.url.startsWith("http")) return; 
-
     e.respondWith((async () => {
         console.log(`[Service Worker] Behandler forespørsel: ${e.request.url}`);
 
-        const cachedResponse = await caches.match(e.request);
-        if (cachedResponse) {
-            console.log(`[Service Worker] Returnerer cachet versjon: ${e.request.url}`);
-            return cachedResponse;
-        }
-
         try {
-            console.log(`[Service Worker] Ikke cachet, prøver å hente fra nett: ${e.request.url}`);
             const response = await fetch(e.request);
-            
-            console.log(`[Service Worker] Lagrer i cache: ${e.request.url}`);
-            const responseClone = response.clone();
-            const cache = await caches.open(cacheID);
-            await cache.put(e.request, responseClone);
-
             return response;
         } catch (error) {
-            console.log(`[Service Worker] Nettverksfeil! Viser offline.html for: ${e.request.url}`);
-            return await caches.match("/offline.html");
+            console.log(`[Service Worker] Nettverksfeil!`);
+
+            if (e.request.destination === "document") {
+                console.log("[Service Worker] Viser offline.html!");
+                return await caches.match("/offline.html");
+            }
+
+            return new Response("Du er offline, og denne ressursen er ikke cachet.", {
+                status: 503,
+                headers: { "Content-Type": "text/plain" }
+            });
         }
     })());
 });
