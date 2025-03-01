@@ -44,21 +44,26 @@ self.addEventListener("fetch", async (e) => {
     if (!e.request.url.startsWith("http")) return; 
 
     e.respondWith((async () => {
+        console.log(`[Service Worker] Behandler forespørsel: ${e.request.url}`);
+
         const cachedResponse = await caches.match(e.request);
-        if (cachedResponse) return cachedResponse;
+        if (cachedResponse) {
+            console.log(`[Service Worker] Returnerer cachet versjon: ${e.request.url}`);
+            return cachedResponse;
+        }
 
         try {
+            console.log(`[Service Worker] Ikke cachet, prøver å hente fra nett: ${e.request.url}`);
             const response = await fetch(e.request);
-            if (!response || response.status !== 200 || response.type !== "basic") {
-                return response;
-            }
-
+            
+            console.log(`[Service Worker] Lagrer i cache: ${e.request.url}`);
             const responseClone = response.clone();
             const cache = await caches.open(cacheID);
             await cache.put(e.request, responseClone);
 
             return response;
         } catch (error) {
+            console.log(`[Service Worker] Nettverksfeil! Viser offline.html for: ${e.request.url}`);
             return await caches.match("/offline.html");
         }
     })());
