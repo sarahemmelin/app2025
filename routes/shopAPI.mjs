@@ -6,6 +6,7 @@ import { vanguard } from "../modules/vanguard.mjs";
 const router = express.Router();
 
 router.get("/", getAllProducts);
+router.get("/products", getAllProducts);
 router.get("/:id", getProduct);
 router.post("/", (req, res, next) => {
     if (vanguard.skills[0].use(req, res)) next();
