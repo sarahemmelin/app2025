@@ -22,13 +22,21 @@ server.set('port', port);
 
 
 server.use((req, res, next) => {
-
-    if (req.url.startsWith("/serviceWorker.js") || req.url.startsWith("/css/") || req.url.startsWith("/icons/")) {
+    console.log(`[Vanguard] Sjekker tilgang til: ${req.url}`);
+    if (
+        req.url === "/" ||
+        req.url.startsWith("/favicon.ico") ||
+        req.url.startsWith("/js/") ||
+        req.url.startsWith("/css/") ||
+        req.url.startsWith("/icons/") ||
+        req.url.startsWith("/serviceWorker.js")
+    ) {
         return next();
     }
 
     for (const skill of vanguard.skills) {
         if (!skill.use(req, res)) {
+            console.log(`[Vanguard] Blokkerte tilgang til: ${req.url}`);
             return;
         }
     }
