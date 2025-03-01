@@ -136,4 +136,15 @@ const resetProductsFile = async () => {
     }
 };
 
-resetProductsFile();
+(async function checkAndResetProducts() {
+  try {
+      const fileData = await fs.readFile(filePath, "utf-8");
+      if (!fileData.trim()) {
+          console.log("shopProducts.json er tom. Oppretter standarddata...");
+          await resetProductsFile();
+      }
+  } catch (error) {
+      console.log("shopProducts.json mangler. Oppretter ny...");
+      await resetProductsFile();
+  }
+})();
