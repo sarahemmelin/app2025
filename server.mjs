@@ -24,7 +24,7 @@ server.set('port', port);
 server.use((req, res, next) => {
     console.log(`[Vanguard] Sjekker tilgang til: ${req.url}`);
     if (
-        req.url === "/" ||
+        req.url.startsWith("/") ||
         req.url.startsWith("/favicon.ico") ||
         req.url.startsWith("/js/") ||
         req.url.startsWith("/css/") ||
@@ -44,6 +44,9 @@ server.use((req, res, next) => {
 });
 
 server.use(express.static("public"));
+server.get("/offline.html", (req, res) => {
+    res.sendFile("offline.html", { root: "public" });
+});
 
 server.use("/shop/", shopAPI);
 server.get("/", (req, res) => {
