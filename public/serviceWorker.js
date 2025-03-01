@@ -41,6 +41,11 @@ self.addEventListener("activate", async (e) => {
 });
 
 self.addEventListener("fetch", async (e) => {
+    
+    if (e.request.url.includes("/shop/")) {
+        console.log(`[Service Worker] Henter API direkte: ${e.request.url}`);
+        return;
+    }
     e.respondWith((async () => {
         console.log(`[Service Worker] Behandler forespørsel: ${e.request.url}`);
 
