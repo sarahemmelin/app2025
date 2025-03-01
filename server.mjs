@@ -22,6 +22,11 @@ server.set('port', port);
 
 
 server.use((req, res, next) => {
+
+    if (req.url.startsWith("/serviceWorker.js") || req.url.startsWith("/css/") || req.url.startsWith("/icons/")) {
+        return next();
+    }
+
     for (const skill of vanguard.skills) {
         if (!skill.use(req, res)) {
             return;
@@ -29,6 +34,8 @@ server.use((req, res, next) => {
     }
     next();
 });
+
+server.use(express.static("public"));
 
 server.use("/shop/", shopAPI);
 server.get("/", (req, res) => {
@@ -38,14 +45,6 @@ server.get("/", (req, res) => {
 // server.use(updateSession);
 // server.use(startSession);
 // server.use(logger);
-// server.use(express.static('public/DeckOfCards'));
-// server.use("/tree/", treeRouter);
-
-// server.use("/quest/", questLogRouter);
-// server.use("/user/", userRouter); 
-
-// server.use('/', deckRoutes);
-// server.use('/tmp', poetryRoutes);
 
 
 server.listen(port, () => {
