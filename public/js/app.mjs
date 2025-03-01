@@ -1,16 +1,10 @@
 import { fetchProducts } from "./api.mjs";
-
+import { registerServiceWorker } from "./registerSW.mjs";
 
 async function initiateApp() {
+    registerServiceWorker();
     const products = await fetchProducts();
     console.log("Produkter:", products);
-}
-
-
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/serviceWorker.js")
-        .then(() => console.log("Service Worker registrert!"))
-        .catch(error => console.error("Service Worker-feil:", error));
 }
 
 initiateApp();
