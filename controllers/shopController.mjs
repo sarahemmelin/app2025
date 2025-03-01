@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 const filePath = "./data/shopProducts.json";
-const schemaFilePath = "./data/schema.json";
+const schemaFilePath = "./data/shopSchema.json";
 
 export async function getAllProducts(req, res) {
   try {
