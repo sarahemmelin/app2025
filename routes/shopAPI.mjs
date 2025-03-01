@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get("/", getAllProducts);
 router.get("/products", getAllProducts);
-router.get("/:id", getProduct);
 router.get("/product-metadata", (req, res) => {
   const metadata = {
     produktStruktur: {
@@ -18,6 +17,7 @@ router.get("/product-metadata", (req, res) => {
   };
   res.json(metadata);
 });
+router.get("/:id", getProduct);
 
 
 router.post("/", (req, res, next) => {
