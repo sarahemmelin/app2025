@@ -1,38 +1,46 @@
+
+
 class ProductCard extends HTMLElement {
     constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
-
-        const template = document.getElementById("product-card-template");
-        if (template) {
-            const templateContent = template.content.cloneNode(true);
-            this.shadowRoot.appendChild(templateContent);
-        } else {
-            console.error("Fant ikke `product-card-template`!");
-        }
+      super();
+      this.attachShadow({ mode: "open" });
+      this.shadowRoot.innerHTML = `
+        <link rel="stylesheet" href="/css/style.css">
+        <div class="product-card">
+          <h2 class="product-name">Laster...</h2>
+          <p><strong>SKU:</strong> <span class="product-sku"></span></p>
+          <p><strong>Pris:</strong> <span class="product-price"></span> kr</p>
+          <p><strong>Kategori:</strong> <span class="product-category"></span></p>
+          <p class="product-description"></p>
+          <div class="extra-attributes"></div>
+        </div>
+      `;
     }
-
+  
     connectedCallback() {
-        this.shadowRoot.querySelector(".product-name").textContent = this.getAttribute("navn") || "Ukjent produkt";
-        this.shadowRoot.querySelector(".product-price").textContent = `Pris: ${this.getAttribute("pris") || "Ukjent"} kr`;
-        this.shadowRoot.querySelector(".product-category").textContent = `Kategori: ${this.getAttribute("kategori") || "Ingen kategori"}`;
-        this.shadowRoot.querySelector(".product-description").textContent = this.getAttribute("beskrivelse") || "Ingen beskrivelse.";
-
-
-        const farge = this.getAttribute("farge");
-        if (farge) {
-            const fargeElement = document.createElement("p");
-            fargeElement.textContent = `Farge: ${farge}`;
-            this.shadowRoot.appendChild(fargeElement);
-        }
-
-        const pigment = this.getAttribute("pigment");
-        if (pigment) {
-            const pigmentElement = document.createElement("p");
-            pigmentElement.textContent = `Pigmentnummer: ${pigment}`;
-            this.shadowRoot.appendChild(pigmentElement);
-        }
+      this.update();
     }
-}
-
-customElements.define("product-card", ProductCard);
+  
+    update() {
+      this.shadowRoot.querySelector(".product-name").textContent = this.getAttribute("navn") || "Ukjent produkt";
+      this.shadowRoot.querySelector(".product-sku").textContent = this.getAttribute("sku") || "Ukjent";
+      this.shadowRoot.querySelector(".product-price").textContent = this.getAttribute("pris") || "Ukjent";
+      this.shadowRoot.querySelector(".product-category").textContent = this.getAttribute("kategori") || "Ingen kategori";
+      this.shadowRoot.querySelector(".product-description").textContent = this.getAttribute("beskrivelse") || "Ingen beskrivelse.";
+  
+      const extraAttributes = this.shadowRoot.querySelector(".extra-attributes");
+      extraAttributes.innerHTML = "";
+      const staticAttributes = ["navn", "sku", "pris", "kategori", "beskrivelse"];
+  
+      for (const attr of this.attributes) {
+        if (!staticAttributes.includes(attr.name)) {
+          const p = document.createElement("p");
+          p.classList.add("product-info");
+          p.innerHTML = `<strong>${attr.name}:</strong> ${this.getAttribute(attr.name)}`;
+          extraAttributes.appendChild(p);
+        }
+      }
+    }
+  }
+  
+  customElements.define("product-card", ProductCard);
