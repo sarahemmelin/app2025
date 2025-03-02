@@ -10,6 +10,8 @@ export async function fetchProducts() {
     }
     catch (error) {
         console.error("Feil ved henting av produkter:", error);
+        const productsContainer = document.getElementById("products");
+        productsContainer.innerHTML = `<p class="error">Kunne ikke hente produkter. Prøv igjen senere.</p>`; 
         return [];
     }
 }

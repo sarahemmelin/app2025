@@ -10,12 +10,17 @@ async function initiateApp() {
     const productsContainer = document.getElementById("products");
     products.forEach(product => {
       const productCard = document.createElement("product-card");
+
+      if (!product.navn) {
+        console.warn ("produktet mangler navn, setter til 'Ukjent produkt'");
+        product.navn = "Ukjent produkt";
+      }
       
       productCard.setAttribute("navn", product.navn);
-      productCard.setAttribute("sku", product.sku);
-      productCard.setAttribute("lager", product.lager);
-      productCard.setAttribute("pris", product.pris);
-      productCard.setAttribute("beskrivelse", product.beskrivelse);
+      productCard.setAttribute("sku", product.sku || "Ukjent SKU");
+      productCard.setAttribute("lager", product.lager || "0");
+      productCard.setAttribute("pris", product.pris || "0");
+      productCard.setAttribute("beskrivelse", product.beskrivelse || "Ingen beskrivelse");
       
       if (product.farge) {
         productCard.setAttribute("farge", product.farge);
