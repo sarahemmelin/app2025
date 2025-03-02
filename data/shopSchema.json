@@ -6,6 +6,6 @@
     "pris": "number",
     "lager": "number",
     "farge": "string",
-    "pigment": "string",
+    "pigmenter": ["string"],
     "beskrivelse": "string"
   }

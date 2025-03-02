@@ -28,7 +28,17 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
   try {
-    const { navn, kategori, pris, lager, farge, pigment, beskrivelse, sku } =
+    console.log("[DEBUG] Mottatt body:", req.body);
+    const { 
+      navn, 
+      kategori, 
+      pris, 
+      lager, 
+      farge, 
+      pigmenter,
+      beskrivelse, 
+      sku }
+       =
       req.body;
 
     if (!navn || !kategori || !pris || !sku) {
@@ -43,6 +53,10 @@ export async function createProduct(req, res) {
 
     const newId = String(highestId + 1);
 
+    if (!Array.isArray(pigmenter)) {
+      pigmenter = [pigmenter];
+  }
+
     products[newId] = {
       id: newId,
       sku,
@@ -51,7 +65,7 @@ export async function createProduct(req, res) {
       pris,
       lager: lager || 0,
       farge: farge || "Ukjent",
-      pigment: pigment || "Ukjent",
+      pigmenter,
       beskrivelse: beskrivelse || "Ingen beskrivelse",
     };
 

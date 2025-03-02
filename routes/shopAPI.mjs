@@ -11,7 +11,7 @@ router.get("/product-metadata", (req, res) => {
   const metadata = {
     produktStruktur: {
       generell: ["id", "sku", "navn", "kategori", "pris", "lager", "beskrivelse"],
-      maling: ["farge", "pigment"], //Rask to-do: Pigmenter kan være flere, så dette må endres til en liste(?) med pigmenter.
+      maling: ["farge", "pigmenter"]
       // Tanke: Bruke kategori som custom - egenskaper til spesifikke produktgrupper. Eksempel: papir: ["papirtype", "gramvekt"]
     }
   };

@@ -9,7 +9,9 @@
     "pris": 0,
     "lager": 100,
     "farge": "Ukjent",
-    "pigment": "Ukjent",
+    "pigmenter": [
+      "Ukjent"
+    ],
     "beskrivelse": "Dette er et dummy produkt som ikke kan slettes"
   },
   "1": {
@@ -23,7 +25,43 @@
     "pris": 100,
     "lager": 10,
     "farge": "Rød",
-    "pigment": "Rød",
+    "pigmenter": [
+      "PR112",
+      "PR122"
+    ],
     "beskrivelse": "Dette er produkt 1"
+  },
+  "2": {
+    "id": "2",
+    "sku": "HOL-AG-PW6",
+    "navn": "Holbein Acrylic Gouache",
+    "kategori": [
+      "Maling",
+      "Acrylic Gouache"
+    ],
+    "pris": 129,
+    "lager": 20,
+    "farge": "Titanium White",
+    "pigmenter": [
+      "PW6"
+    ],
+    "beskrivelse": "En dekkende hvit akryl gouache med høy pigmenttetthet."
+  },
+  "3": {
+    "id": "3",
+    "sku": "HOL-AG-CRIMSON",
+    "navn": "Holbein Acrylic Gouache – Crimson",
+    "kategori": [
+      "Maling",
+      "Acrylic Gouache"
+    ],
+    "pris": 149,
+    "lager": 15,
+    "farge": "Crimson Red",
+    "pigmenter": [
+      "PR112",
+      "PR122"
+    ],
+    "beskrivelse": "En rik crimson-rød akryl gouache med to pigmenter for intensitet."
   }
 }
