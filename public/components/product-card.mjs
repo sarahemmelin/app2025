@@ -1,36 +1,62 @@
 
-
 class ProductCard extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-      this.shadowRoot.innerHTML = `
-        <link rel="stylesheet" href="/css/style.css">
-        <div class="product-card">
-          <h2 class="product-name">Laster...</h2>
-          <p><strong>SKU:</strong> <span class="product-sku"></span></p>
-          <p><strong>Pris:</strong> <span class="product-price"></span> kr</p>
-          <p><strong>Kategori:</strong> <span class="product-category"></span></p>
-          <p class="product-description"></p>
-          <div class="extra-attributes"></div>
-        </div>
-      `;
+      this.loadTemplate();
     }
   
-    connectedCallback() {
-      this.update();
+    async loadTemplate() {
+      try {
+
+        const response = await fetch("/templates/productCard.html");
+        if (!response.ok) {
+          throw new Error(`HTTP-feil! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const templateWrapper = document.createElement("div");
+        templateWrapper.innerHTML = text;
+        const template = templateWrapper.querySelector("template");
+        if (template) {
+          const clone = template.content.cloneNode(true);
+          const linkElement = document.createElement("link");
+          linkElement.setAttribute("rel", "stylesheet");
+          linkElement.setAttribute("href", "/css/style.css");
+
+          this.shadowRoot.appendChild(linkElement);
+          this.shadowRoot.appendChild(clone);
+          this.update();
+
+        } else {
+          console.error("[ProductCard] Fant ikke template-elementet.");
+        }
+      } catch (error) {
+        console.error("[ProductCard] Feil ved lasting av template:", error);
+      }
     }
   
     update() {
-      this.shadowRoot.querySelector(".product-name").textContent = this.getAttribute("navn") || "Ukjent produkt";
-      this.shadowRoot.querySelector(".product-sku").textContent = this.getAttribute("sku") || "Ukjent";
-      this.shadowRoot.querySelector(".product-price").textContent = this.getAttribute("pris") || "Ukjent";
-      this.shadowRoot.querySelector(".product-category").textContent = this.getAttribute("kategori") || "Ingen kategori";
-      this.shadowRoot.querySelector(".product-description").textContent = this.getAttribute("beskrivelse") || "Ingen beskrivelse.";
+      const shadow = this.shadowRoot;
+      const productName = shadow.querySelector(".product-name");
+      const productSKU = shadow.querySelector(".product-sku");
+      const productPrice = shadow.querySelector(".product-price");
+      const productDescription = shadow.querySelector(".product-description");
+      const productStock = shadow.querySelector(".product-stock");
+      const extraAttributes = shadow.querySelector(".extra-attributes");
   
-      const extraAttributes = this.shadowRoot.querySelector(".extra-attributes");
+      if (!productName || !productSKU || !productPrice || !productDescription || !productStock) {
+        console.error("[ProductCard] Templaten er ikke riktig lastet inn.");
+        return;
+      }
+  
+      productName.textContent = this.getAttribute("navn") || "Ukjent produkt";
+      productSKU.textContent = this.getAttribute("sku") || "Ukjent";
+      productPrice.textContent = `${this.getAttribute("pris") || "Ukjent"} kr`;
+      productDescription.textContent = this.getAttribute("beskrivelse") || "Ingen beskrivelse.";
+      productStock.textContent = this.getAttribute("lager") || "0";
+  
       extraAttributes.innerHTML = "";
-      const staticAttributes = ["navn", "sku", "pris", "kategori", "beskrivelse"];
+      const staticAttributes = ["navn", "sku", "pris", "lager", "beskrivelse"];
   
       for (const attr of this.attributes) {
         if (!staticAttributes.includes(attr.name)) {
@@ -39,6 +65,12 @@ class ProductCard extends HTMLElement {
           p.innerHTML = `<strong>${attr.name}:</strong> ${this.getAttribute(attr.name)}`;
           extraAttributes.appendChild(p);
         }
+      }
+    }
+  
+    connectedCallback() {
+      if (this.shadowRoot.children.length > 0) {
+        this.update();
       }
     }
   }
