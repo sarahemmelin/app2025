@@ -4,8 +4,8 @@ const contentToCache = [
     "/index.html",
     "/offline.html",
     "/js/app.mjs",
-    // "/icons/small.png",
-    // "/icons/large.png",
+    "/icons/small.png",
+    "/icons/large.png",
     "/css/style.css"
 ];
 
