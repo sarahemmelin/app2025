@@ -17,6 +17,7 @@ async function initiateApp() {
         product.navn = "Ukjent produkt";
       }
       
+      productCard.setAttribute("id", product.id);
       productCard.setAttribute("navn", product.navn);
       productCard.setAttribute("sku", product.sku || "Ukjent SKU");
       productCard.setAttribute("lager", product.lager || "0");

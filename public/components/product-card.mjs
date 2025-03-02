@@ -37,6 +37,7 @@ class ProductCard extends HTMLElement {
   
     update() {
       const shadow = this.shadowRoot;
+      
       const productName = shadow.querySelector(".product-name");
       const productSKU = shadow.querySelector(".product-sku");
       const productPrice = shadow.querySelector(".product-price");
