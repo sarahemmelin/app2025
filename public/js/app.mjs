@@ -5,10 +5,11 @@ import "/components/product-card.mjs";
 async function initiateApp() {
     registerServiceWorker();
     const products = await fetchProducts();
-    console.log("Produkter:", products);
-    
+
     const productsContainer = document.getElementById("products");
-    products.forEach(product => {
+
+    const filteredProducts = products.filter(product => product.id !== "0");
+    filteredProducts.forEach(product => {
       const productCard = document.createElement("product-card");
 
       if (!product.navn) {
