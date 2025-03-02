@@ -1,8 +1,11 @@
 <template id="product-card-template">
     <div class="product-card">
-        <h2 class="product-name"></h2>
-        <p class="product-price"></p>
-        <p class="product-category"></p>
-        <p class="product-description"></p>
+        <h3 class="product-header product-name">Produktnavn</h3>
+        <p class="product-info"><strong>SKU:</strong> <span class="product-sku"></span></p>
+        <p class="product-info"><strong>Lagerantall:</strong> <span class="product-stock"></span></p>
+        <p class="product-info"><strong>Pris:</strong> <span class="product-price"></span> kr</p>
+        <p class="product-info"><strong>Beskrivelse:</strong> <span class="product-description"></span></p>
+        <div class="extra-attributes"></div> 
+        <button class="edit-button">Rediger produkt</button>
     </div>
 </template>
