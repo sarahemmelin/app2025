@@ -1,9 +1,24 @@
-export function authenticateAPIKey(req, res, next) {
-    const requestId = Math.random().toString(36).substring(7);
+const activeTokens = new Set();
 
-    if (req.headers["x-api-key"] !== process.env.API_KEY) {
-        return res.status(401).json({ message: "Ugyldig API-nøkkel." }); 
+export function authenticateToken(req, res, next) {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+        return res.status(401).json({ message: "Manglende autorisasjon." });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!activeTokens.has(token)) {
+        return res.status(403).json({ message: "Ugyldig eller utløpt token." });
     }
 
     next();
+}
+
+export function storeToken(token) {
+    activeTokens.add(token);
+}
+
+export function removeToken(token) {
+    activeTokens.delete(token);
 }
