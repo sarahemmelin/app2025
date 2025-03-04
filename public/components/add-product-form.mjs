@@ -35,11 +35,20 @@ class AddProductForm extends HTMLElement {
           const formData = new FormData(form);
           const newProduct = Object.fromEntries(formData.entries());
           console.log('Nytt produkt:', newProduct);
+
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            console.error('Ingen token funnet! Brukeren er ikke logget inn.');
+            return;
+          }
   
           try {
             const response = await fetch('/shop/', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+               },
               body: JSON.stringify(newProduct)
             });
             if (!response.ok) {
