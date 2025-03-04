@@ -19,6 +19,7 @@ class ProductCard extends HTMLElement {
         const template = templateWrapper.querySelector("template");
         if (template) {
           const clone = template.content.cloneNode(true);
+          
           const linkElement = document.createElement("link");
           linkElement.setAttribute("rel", "stylesheet");
           linkElement.setAttribute("href", "/css/style.css");

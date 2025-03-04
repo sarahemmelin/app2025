@@ -59,3 +59,18 @@ form {
     padding: 0.5rem;
     font-size: 1rem;
   }
+
+/* LOGIN FORM --------------------------------------------*/
+:host {
+    display: block;
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+}
+input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
