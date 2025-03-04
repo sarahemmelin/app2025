@@ -1,20 +1,44 @@
 import { fetchProducts } from "./api.mjs";
 
 export async function initProductView() {
-  const products = await fetchProducts();
-  const productsContainer = document.getElementById("products");
-  
-  const filteredProducts = products.filter(product => product.id !== "0");
-  filteredProducts.forEach(product => {
-    const productCard = document.createElement("product-card");
+  try{
+    const products = await fetchProducts();
+    const productsContainer = document.getElementById("products");
+    const productFormsContainer = document.getElementById("addProductForm");
 
-    if (!product.navn) {
-      console.warn("Produktet mangler navn, setter til 'Ukjent produkt'");
-      product.navn = "Ukjent produkt";
+    if (!productsContainer) {
+      console.error("[ERROR] Fant ikke 'products'-div i DOM.");
+      return;
     }
 
+    if (!productFormsContainer) {
+      console.error("[ERROR] Fant ikke 'addProductForm'-div i DOM.");
+      return;
+    }
+
+    productsContainer.innerHTML = "";
+    productFormsContainer.innerHTML = "";
+
+    const filteredProducts = products.filter(product => product.id !== "0");
+
+    filteredProducts.forEach((product) => {
+      const productCard = createProductCard(product);
+      productsContainer.appendChild(productCard);
+    });
+    
+    const addForm = document.createElement("add-product-form");
+    productFormsContainer.appendChild(addForm);
+  }
+  catch (error) {
+    console.error("[ERROR] Feil ved initiering av produktvisning:", error);
+  }
+}
+
+  function createProductCard(product) {
+    const productCard = document.createElement("product-card");
+
     productCard.setAttribute("id", product.id);
-    productCard.setAttribute("navn", product.navn);
+    productCard.setAttribute("navn", product.navn || "Ukjent produkt");
     productCard.setAttribute("sku", product.sku || "Ukjent SKU");
     productCard.setAttribute("lager", product.lager || "0");
     productCard.setAttribute("pris", product.pris || "0");
@@ -24,13 +48,8 @@ export async function initProductView() {
       productCard.setAttribute("farge", product.farge);
     }
     if (product.pigmenter) {
-      productCard.setAttribute("pigmenter", Array.isArray(product.pigmenter) ? product.pigmenter.join(", ") : product.pigmenter);
+      productCard.setAttribute("pigmenter", product.pigmenter.join(", "));
     }
 
-    productsContainer.appendChild(productCard);
-  });
-
-  const appContainer = document.getElementById("addProductForm");
-  const addForm = document.createElement("add-product-form");
-  appContainer.appendChild(addForm);
-}
+    return productCard;
+  }
