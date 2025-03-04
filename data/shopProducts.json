@@ -63,5 +63,33 @@
       "PR122"
     ],
     "beskrivelse": "En rik crimson-rød akryl gouache med to pigmenter for intensitet."
+  },
+  "4": {
+    "id": "4",
+    "sku": "HOL-AG-CR4",
+    "navn": "Holbein Acrylic Gouache",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": "34",
+    "lager": "1",
+    "farge": "Ukjent",
+    "pigmenter": [
+      null
+    ],
+    "beskrivelse": "ser"
+  },
+  "5": {
+    "id": "5",
+    "sku": "HOL-AG-CR4",
+    "navn": "Holbein Acrylic Gouache",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": 34,
+    "lager": 545,
+    "farge": "Ukjent",
+    "pigmenter": [],
+    "beskrivelse": "rfdfdf"
   }
 }
