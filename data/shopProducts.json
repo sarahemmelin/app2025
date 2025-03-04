@@ -91,5 +91,31 @@
     "farge": "Ukjent",
     "pigmenter": [],
     "beskrivelse": "rfdfdf"
+  },
+  "6": {
+    "id": "6",
+    "sku": "HOL-AG-CR4",
+    "navn": "fdf",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": 3,
+    "lager": 5435,
+    "farge": "Ukjent",
+    "pigmenter": [],
+    "beskrivelse": "dsdsd"
+  },
+  "7": {
+    "id": "7",
+    "sku": "HOL-AG-CR4",
+    "navn": "Holbein Acrylic Gouache",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": 342,
+    "lager": 34,
+    "farge": "Ukjent",
+    "pigmenter": [],
+    "beskrivelse": "ffsf"
   }
 }
