@@ -5,8 +5,8 @@
         "local": "node --env-file=.env init/init.mjs"
     },
     "dependencies": {
-        "dotenv": "^16.4.7",
-        "express": "^4.21.2",
-        "sanitize-html": "^2.14.0"
+        "dotenv": "16.4.7",
+        "express": "4.21.2",
+        "sanitize-html": "2.14.0"
     }
 }
