@@ -1,16 +1,9 @@
 import express from "express";
-import { storeToken } from "../modules/auth.mjs";
+import { storeToken, verifyPassword } from "../modules/auth.mjs";
 import dotenv from "dotenv";
+
 dotenv.config();
-
 const router = express.Router();
-
-const users = [
-  {
-    email: process.env.ADMIN_EMAIL,
-    password: process.env.ADMIN_PASSWORD,
-  }
-];
 
 function generateToken() {
   return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
@@ -19,15 +12,26 @@ function generateToken() {
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const user = users.find(user => user.email === email && user.password === password);
-  if (!user) {
-    return res.status(401).json({ message: "Feil brukernavn eller passord" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "E-post og passord kreves." });
+  } 
+
+  const admin = {
+    email: process.env.ADMIN_EMAIL,
+    salt: process.env.ADMIN_SALT,
+    passwordHash: process.env.ADMIN_HASH
+  };
+
+  if (email !== admin.email) {
+    return res.status(401).json({ message: "Feil brukernavn eller passord." });
+  }
+
+  if (!verifyPassword(password, admin.salt, admin.passwordHash)) {
+    return res.status(401).json({ message: "Feil brukernavn eller passord." });
   }
 
   const token = generateToken();
   storeToken(token);
-
-
 
   res.json({ message: "Innlogging vellykket", token });
 });
