@@ -2,16 +2,17 @@ import crypto from 'crypto';
 
 const activeTokens = new Set();
 
+export function verifyPassword(password, salt, storedHash) {
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return hash === storedHash;
+}
+
 export function hashPassword(password) {
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     return { salt, hash };
 }
 
-export function verifyPassword(password, salt, storedHash) {
-    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-    return hash === storedHash;
-}
 
 export function authenticateToken(req, res, next) {
     const authHeader = req.headers["authorization"];
