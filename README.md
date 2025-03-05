@@ -5,8 +5,16 @@ ______________________________________________________________
 console.error skal gi "[ERROR] beskjed, error"
 console.log skal gi "[DEBUG] beskjed, data.data"
 console.warn skal gi "[WARN] beskjed, data"
-
 ______________________________________________________________
+
+TODO - liste: 
+✅ Passord er hashet og blir verifisert
+✅ Server sender tilbake en token
+✅ Token lagres i nettleser:localstorage
+✅ Admin-data er sikret i .env - filen
+
+
+
 
 *Assignment 3: Datastrukturer og ekstern server*
 PROD-versjon (Render):
