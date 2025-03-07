@@ -143,5 +143,18 @@
     "farge": "Ukjent",
     "pigmenter": [],
     "beskrivelse": "fsfs"
+  },
+  "10": {
+    "id": "10",
+    "sku": "HOL-AG-CR4",
+    "navn": "Testprodukt NYTT ",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": 23,
+    "lager": 23,
+    "farge": "Ukjent",
+    "pigmenter": [],
+    "beskrivelse": "rerfr"
   }
 }

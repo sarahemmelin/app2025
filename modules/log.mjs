@@ -10,6 +10,20 @@ export const LOGG_LEVELS = {
     ALWAYS: ++level_id,
 };
 
+const ignoredPaths = [
+    "/favicon.ico",
+    "/manifest.webmanifest", 
+    "/serviceWorker.js"
+];
+
+const ignoredPrefixes = [
+    "/js/",
+    "/css/",
+    "/icons/",
+    "/templates/"
+];
+
+
 let logInstance = (req, res, next) => {
         logVerbose(req, res);
         logImportant(req, res);
@@ -71,7 +85,20 @@ const logAlways = (req, res, next) => {
 };
 
 const printLog = (req, res) =>{
+
+
     let logStatement = `|${ReadableTime}||${colorize(req.method)}|${req.url}`;
+
+
+    if (ignoredPaths.includes(req.url) || ignoredPrefixes.some(prefix => req.url.startsWith(prefix))) {
+        return;
+    }
+
+    if (req.url === "/") {
+        logStatement += " -> /index.html (root omdirigering)";
+    } else if (!req.url.startsWith("/api") && !req.url.startsWith("/shop")) {
+        logStatement += " -> /index.html (SPA-routing)";
+    }
     saveLog(logStatement);
 };
 
