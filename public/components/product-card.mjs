@@ -17,22 +17,22 @@ class ProductCard extends HTMLElement {
         const templateWrapper = document.createElement("div");
         templateWrapper.innerHTML = text;
         const template = templateWrapper.querySelector("template");
+
         if (template) {
           const clone = template.content.cloneNode(true);
           
           const linkElement = document.createElement("link");
           linkElement.setAttribute("rel", "stylesheet");
           linkElement.setAttribute("href", "/css/style.css");
-
           this.shadowRoot.appendChild(linkElement);
           this.shadowRoot.appendChild(clone);
           this.update();
 
         } else {
-          console.error("[ProductCard] Fant ikke template-elementet.");
+          console.error("[ERROR] Fant ikke template-elementet.");
         }
       } catch (error) {
-        console.error("[ProductCard] Feil ved lasting av template:", error);
+        console.error("[ERROR] Feil ved lasting av template:", error);
       }
     }
   
@@ -45,9 +45,10 @@ class ProductCard extends HTMLElement {
       const productDescription = shadow.querySelector(".product-description");
       const productStock = shadow.querySelector(".product-stock");
       const extraAttributes = shadow.querySelector(".extra-attributes");
+      const deleteBtn = shadow.querySelector(".delete-button");
   
       if (!productName || !productSKU || !productPrice || !productDescription || !productStock) {
-        console.error("[ProductCard] Templaten er ikke riktig lastet inn.");
+        console.error("[ERROR] Templaten er ikke riktig lastet inn.");
         return;
       }
   
@@ -68,8 +69,37 @@ class ProductCard extends HTMLElement {
           extraAttributes.appendChild(p);
         }
       }
+
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", (event) => this.handleDelete(event));
+    } else {
+        console.error("[ERROR] Fant ikke delete-knappen i DOM-en!");
     }
-  
+
+    }
+
+   handleDelete(event) {
+    event.stopPropagation();
+    const productId = this.getAttribute("id");
+
+    if (!productId) {
+      console.error("[ERROR] Mangler produkt-ID, kan ikke slette.");
+      return;
+    }
+
+    const isConfirmed = window.confirm(`Er du sikker på at du vil slette produktet med ID ${productId}?`);
+    if (!isConfirmed) {
+      console.log("[INFO] Sletting avbrutt");
+      return;
+    }
+
+    this.dispatchEvent(new CustomEvent("deleteProduct", {
+      detail: { productId },
+      composed: true,
+      bubbles: true,
+    }));
+  }
+
     connectedCallback() {
       if (this.shadowRoot.children.length > 0) {
         this.update();
