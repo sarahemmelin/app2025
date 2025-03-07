@@ -3,8 +3,17 @@ import { fetchProducts } from "./api.mjs";
 export async function initProductView() {
   try{
     const products = await fetchProducts();
-    const productsContainer = document.getElementById("products");
-    const productFormsContainer = document.getElementById("addProductForm");
+    renderProducts(products);
+  }
+  catch (error) {
+    console.error("[ERROR] Feil ved henting av produkter:", error);
+  }
+}
+
+
+function renderProducts(products) {
+  const productsContainer = document.getElementById("products");
+  const productFormsContainer = document.getElementById("addProductForm");
 
     if (!productsContainer) {
       console.error("[ERROR] Fant ikke 'products'-div i DOM.");
@@ -29,10 +38,6 @@ export async function initProductView() {
     const addForm = document.createElement("add-product-form");
     productFormsContainer.appendChild(addForm);
   }
-  catch (error) {
-    console.error("[ERROR] Feil ved initiering av produktvisning:", error);
-  }
-}
 
   function createProductCard(product) {
     const productCard = document.createElement("product-card");
