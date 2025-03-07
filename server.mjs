@@ -23,21 +23,11 @@ server.use((req, res, next) => {
         "/icons/",
         "/serviceWorker.js"
     ];
+
     if (ignoredPaths.some(path => req.url.startsWith(path))) {
         return next();
     }
     console.log(`[Vanguard] Sjekker tilgang til: ${req.url}`);
-    
-    if (
-        req.url.startsWith("/") ||
-        req.url.startsWith("/favicon.ico") ||
-        req.url.startsWith("/js/") ||
-        req.url.startsWith("/css/") ||
-        req.url.startsWith("/icons/") ||
-        req.url.startsWith("/serviceWorker.js")
-    ) {
-        return next();
-    }
 
     for (const skill of vanguard.skills) {
         if (!skill.use(req, res)) {
