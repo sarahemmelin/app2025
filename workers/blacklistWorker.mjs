@@ -5,9 +5,8 @@ const BLACKLIST_FILE = "./data/blacklist.json";
 
 async function saveBlacklist(blacklistedIPs) {
     try {
-        console.log("[Blacklist Worker] Prøver å lagre blacklist:", blacklistedIPs);
         const jsonData = JSON.stringify([...blacklistedIPs], null, 2);
-        console.log("JSON-data som skal skrives:", jsonData);
+        console.log("Oppdatert Blacklist:", jsonData);
 
         await fs.writeFile(BLACKLIST_FILE, jsonData);
         console.log("[Blacklist Worker] Lagret blacklist.json!");
