@@ -40,7 +40,6 @@ class LoginComponent extends HTMLElement {
         }
     }
     
-
     async loginEvent() {
         const email = this.shadowRoot.getElementById("email").value;
         const password = this.shadowRoot.getElementById("password").value; 
@@ -50,7 +49,7 @@ class LoginComponent extends HTMLElement {
             bubbles: true,
             composed: true
         }));    
-        }
     }
+}
 
 customElements.define("login-component", LoginComponent);
