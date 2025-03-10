@@ -83,6 +83,44 @@ export const vanguard = {
       },
     },
     {
+      name: "Ultimate Defense",
+      description: "Turns the server into a teapot, confusing attackers.",
+      use(req, res) {
+        const ip = vanguard.getIP(req);
+        const now = Date.now();
+    
+        if (vanguard.requestCounts[ip] > vanguard.DDOS_threshold * 1.5) {
+          console.warn(`[Vanguard] 🍵 ${ip} har spammet for mye! Aktiverer Teapot Defense!`);
+    
+          if (Math.random() < 0.7) {
+            res.status(418).send("Vanguard: I am a teapot, you cannot break me!");
+          } else {
+            res.status(204).send();
+          }
+          
+          return false; 
+        }
+    
+        if (vanguard.tempBan[ip] && now < vanguard.tempBan[ip]) {
+          console.warn(`[Vanguard] 🛑 ${ip} ignorerer temp-ban! Aktiverer stealth-mode!`);
+          res.status(404).send("Vanguard: This page does not exist.");
+          return false;
+        }
+    
+        if (vanguard.requestCounts[ip] > vanguard.blacklistThreshold - 5) {
+          console.warn(`[Vanguard] 🐌 ${ip} er nær permaban! Slowing down requests.`);
+          
+          setTimeout(() => {
+            res.status(429).send("Vanguard: Too many requests, slow down!");
+          }, 3000);
+    
+          return false;
+        }
+    
+        return true;
+      },
+    },    
+    {
       name: "Defensive Stance",
       description: "Limits rapid requests to prevent spam attacks.",
       use(req, res) {
@@ -110,46 +148,7 @@ export const vanguard = {
         vanguard.trackRequests(ip, now);
         return vanguard.checkRequestLimits(ip, now, res);
       },
-    },
-    {
-      name: "Ultimate Defense",
-      description: "Turns the server into a teapot, confusing attackers.",
-      use(req, res) {
-        const ip = vanguard.getIP(req);
-        const now = Date.now();
-
-        if (vanguard.requestCounts[ip] > vanguard.DDOS_threshold * 2) {
-          console.warn(`[Vanguard] 🍵 ${ip} har spammet for mye! Aktiverer Teapot Defense!`);
-
-          if (Math.random() < 0.5) {
-            res.status(HTTP_CODES.RPG_DEFENSE.SHIELD_BLOCK).send("Vanguard: I am a teapot, you cannot break me!");
-          } else {
-            res.status(HTTP_CODES.SUCCESS.NO_CONTENT).send();
-          }
-
-          return false;
-        }
-
-        if (vanguard.tempBan[ip] && now < vanguard.tempBan[ip]) {
-          console.warn(`[Vanguard] 🛑 ${ip} ignorerer temp-ban! Aktiverer stealth-mode!`);
-
-          res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).send("Vanguard: This page does not exist.");
-          return false;
-        }
-
-        if (vanguard.requestCounts[ip] > vanguard.blacklistThreshold - 5) {
-          console.warn(`[Vanguard] 🐌 ${ip} er nær permaban! Slowing down requests.`);
-
-          setTimeout(() => {
-            res.status(HTTP_CODES.CLIENT_ERROR.TOO_MANY_REQUESTS).send("Vanguard: Too many requests, slow down!");
-          }, 5000);
-
-          return false;
-        }
-
-        return true;
-      },
-    },
+    }
   ],
 
   //===== Functions =========================================================//
