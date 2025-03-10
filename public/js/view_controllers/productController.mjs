@@ -12,32 +12,32 @@ export async function initProductView() {
 
 
 function renderProducts(products) {
-  const productsContainer = document.getElementById("products");
-  const productFormsContainer = document.getElementById("addProductForm");
-
-    if (!productsContainer) {
-      console.error("[ERROR] Fant ikke 'products'-div i DOM.");
-      return;
-    }
-
-    if (!productFormsContainer) {
-      console.error("[ERROR] Fant ikke 'addProductForm'-div i DOM.");
-      return;
-    }
-
-    productsContainer.innerHTML = "";
-    productFormsContainer.innerHTML = "";
-
-    const filteredProducts = products.filter(product => product.id !== "0");
-
-    filteredProducts.forEach((product) => {
-      const productCard = createProductCard(product);
-      productsContainer.appendChild(productCard);
-    });
-    
-    const addForm = document.createElement("add-product-form");
-    productFormsContainer.appendChild(addForm);
+  const mainComponent = document.getElementById("mainComponent");
+  if (!mainComponent) {
+    console.error("[ERROR] Fant ikke #mainComponent i DOM.");
+    return;
   }
+
+  mainComponent.innerHTML = "";
+  const productContainer = document.createElement("div");
+  productContainer.setAttribute("id", "productContainter");
+  mainComponent.appendChild(productContainer);
+
+  const filteredProducts = products.filter(product => product.id !== "0");
+
+  if (filteredProducts.length === 0) {
+    productContainer.innerHTML = "<p>Ingen produkter tilgjengelig.</p>";
+    return;
+  }
+
+  filteredProducts.forEach((product) => {
+    const productCard = createProductCard(product);
+    productContainer.appendChild(productCard);
+  });
+    
+  const addForm = document.createElement("add-product-form");
+  mainComponent.appendChild(addForm);
+}
 
   function createProductCard(product) {
     const productCard = document.createElement("product-card");
