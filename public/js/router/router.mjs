@@ -1,5 +1,5 @@
 
-import { initProductView } from "../controllers/productController.mjs";
+import { initProductView } from "../view_controllers/productController.mjs";
 
 export function handleRouting() {
     const mainComponent = document.getElementById("mainComponent");

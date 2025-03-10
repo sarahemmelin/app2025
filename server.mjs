@@ -41,6 +41,13 @@ server.use((req, res, next) => {
 
 server.use(log(LOGG_LEVELS.ALWAYS));
 
+server.use((req, res, next) => {
+    if (req.url.endsWith(".mjs")) {
+        res.setHeader("Content-Type", "application/javascript");
+    }
+    next();
+});
+
 server.use(express.static("public"));
 
 server.get("/offline.html", (req, res) => {

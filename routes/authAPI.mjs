@@ -10,6 +10,7 @@ function generateToken() {
 }
 
 router.post("/login", (req, res) => {
+  console.log("[DEBUG] Mottatt req.body:", req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
