@@ -2,7 +2,11 @@ import express from "express";
 import { storeToken, verifyPassword } from "../modules/auth.mjs";
 import dotenv from "dotenv";
 
-dotenv.config();
+// dotenv.config();
+console.log("[DEBUG] Render Environment Variables:");
+console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
+console.log("ADMIN_SALT:", process.env.ADMIN_SALT);
+console.log("ADMIN_HASH:", process.env.ADMIN_HASH);
 const router = express.Router();
 
 function generateToken() {

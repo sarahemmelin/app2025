@@ -1,7 +1,4 @@
 'use strict';
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from 'express';
 import shopAPI from './routes/shopAPI.mjs';
 import authAPI from './routes/authAPI.mjs';
