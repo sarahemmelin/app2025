@@ -1,10 +1,11 @@
 //TODO:
-// 1. productController har [ERROR productController] for Error-meldinger. [DEBUG productController] for debug-meldinger.
-// 2. Sette alle console.log inn i en if - sjekk for debugMode (hvis noen).
-
-const DEBUG_MODE = true;
+// [] productController har [ERROR productController] for Error-meldinger. [DEBUG productController] for debug-meldinger.
+// [] Sette alle console.log inn i en if - sjekk for debugMode (hvis noen).
+// [] Lage en felles fil for DEBUG_MODE slik at den kan toggles fra ett sted.
+// [] Rydde opp i kode, all fetch skal skje fra ett sted KUN. 
 
 import { fetchProducts } from "../api/api.mjs";
+import { DEBUG_MODE } from "../config/clientConfig.mjs";
 
 export async function initProductView() {
   try {
