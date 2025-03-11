@@ -156,5 +156,18 @@
     "farge": "Ukjent",
     "pigmenter": [],
     "beskrivelse": "rerfr"
+  },
+  "11": {
+    "id": "11",
+    "sku": "HOL-AG-CR4",
+    "navn": "11.03.2025 PROD 1",
+    "kategori": [
+      "ukjent"
+    ],
+    "pris": 12,
+    "lager": 12,
+    "farge": "Ukjent",
+    "pigmenter": [],
+    "beskrivelse": "test"
   }
 }

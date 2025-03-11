@@ -1,15 +1,23 @@
+//TODO: 
+//1. Legge inn DEBUG_MODE i alle filer. 
+//2. Rydde opp i statuskoder (skal komme fra en felles fil).
+//3. Alle fetchene skal samles i en fetch. Avventer med å rydde i denne filen videre.
+//4. Vurdere å rydde opp i feilhåndtering (hvis tid).
+
 import fs from "fs/promises";
+import { DEBUG_MODE } from "../config/debug.mjs";
+import HTTP_CODES from "../utils/httpCodes.mjs";
+
 const filePath = "./data/shopProducts.json";
 
 export async function getAllProducts(req, res) {
   try {
     const products = await getFileData(filePath);
-
     res.json(Object.values(products));
 
   } catch (error) {
-    console.error([ERROR], "Feil ved henting av produkter", error);
-    res.status(500).json({ message: "Feil ved henting av produkter", error });
+    console.error("[ERROR shopController], Feil ved henting av produkter", error);
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved henting av produkter", error });
   }
 }
 
@@ -31,7 +39,7 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
   try {
-    console.log("[DEBUG] Mottatt body:", req.body);
+    if (DEBUG_MODE) console.log("[DEBUG shopController] Mottatt body:", req.body);
     let { 
       navn, 
       kategori, 
@@ -76,7 +84,7 @@ export async function createProduct(req, res) {
     };
 
     await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-    console.log("[DEBUG] Produkt lagret:", req.body);
+    if (DEBUG_MODE) console.log("[DEBUG shopController] Produkt lagret:", req.body);
     res
       .status(201)
       .json({
@@ -108,7 +116,7 @@ export async function deleteProduct(req, res) {
 
     await fs.writeFile(filePath, JSON.stringify(products, null, 2));
 
-    console.log(`[DEBUG] Produkt med ID ${id} slettet.`);
+    if (DEBUG_MODE) console.log(`[DEBUG shopController] Produkt med ID ${id} slettet.`);
     res.json({ message: `Produkt med ID ${id} slettet` });
 
   } catch (error) {
@@ -153,7 +161,7 @@ const resetProductsFile = async () => {
     };
 
     await fs.writeFile(filePath, JSON.stringify({ "0": dummyProduct }, null, 2));
-    console.log("[DEBUG] shopProducts.json er gjenopprettet med standarddata.");
+    if (DEBUG_MODE) console.log("[DEBUG shopController] shopProducts.json er gjenopprettet med standarddata.");
 
   } catch (error) {
     console.error("[ERROR] Klarte ikke å gjenopprette produkter:", error.message);
