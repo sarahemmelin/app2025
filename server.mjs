@@ -61,18 +61,10 @@ server.get("/", (req, res) => {
     res.sendFile("index.html", { root: "public" });
 });
 
-server.get("*", (req, res, next) => {
-    if (req.url.startsWith("/shop/") || req.url.startsWith("/login")) {
-        return next();
-    }
+server.get("*", (req, res) => {
     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
     res.sendFile(path.resolve("public/index.html"));
 });
-
-// server.get("*", (req, res) => {
-//     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
-//     res.sendFile(path.resolve("public/index.html"));
-// });
 
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
