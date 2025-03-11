@@ -23,6 +23,11 @@ router.post("/login", (req, res) => {
     passwordHash: process.env.ADMIN_HASH
   };
   
+  console.log("[DEBUG] Render Environment Variables:");
+  console.log("ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
+  console.log("ADMIN_SALT:", process.env.ADMIN_SALT);
+  console.log("ADMIN_HASH:", process.env.ADMIN_HASH);
+
   console.log("[DEBUG] Forventet admin-email:", admin.email);
   console.log("[DEBUG] Bruker oppgitt email:", email);
 
