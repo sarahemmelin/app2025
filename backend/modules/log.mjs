@@ -2,7 +2,7 @@
 // 1. Skal denne brukes videre? Da bør vi sannsynligvis gjøre denne om til en config - fil og flytte den inn i config - mappen. Prioriteres lavt.
 
 import ReadableTime from '../utils/translateTime.mjs';
-import { Worker } from "node:worker_threads";
+import { Worker } from 'node:worker_threads';
 
 let level_id = 0;
 let currentGlobalLogLvl = null;

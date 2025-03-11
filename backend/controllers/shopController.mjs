@@ -7,8 +7,12 @@
 import fs from "fs/promises";
 import { DEBUG_MODE } from "../config/debug.mjs";
 import HTTP_CODES from "../utils/httpCodes.mjs";
+import path from 'path';
+import { fileURLToPath } from "url";
 
-const filePath = "./data/shopProducts.json";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const filePath = path.join(__dirname, "../data/shopProducts.json");
 
 export async function getAllProducts(req, res) {
   try {

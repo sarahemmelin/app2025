@@ -6,8 +6,12 @@ import { vanguard } from './modules/vanguard.mjs';
 import path from 'path';
 import log, { eventLogger, LOGG_LEVELS } from './modules/log.mjs';
 import { DEBUG_MODE } from './config/debug.mjs';
+import { fileURLToPath } from "url";
 
 if (DEBUG_MODE) console.log("DEBUG NODE_ENV:", process.env.NODE_ENV || "Ikke satt");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = express();
 server.use(express.json());
@@ -48,23 +52,31 @@ server.use((req, res, next) => {
     next();
 });
 
-server.use(express.static("public"));
+server.use(express.static(path.join(__dirname, "../frontend/public")));
+
+
 
 server.get("/offline.html", (req, res) => {
-    res.sendFile("offline.html", { root: "public" });
+    res.sendFile(path.join(__dirname, "../frontend/public/offline.html"));
 });
+
 
 server.use("/shop/", shopAPI);
 server.use("/", authAPI);
 
 server.get("/", (req, res) => {
-    res.sendFile("index.html", { root: "public" });
+    res.sendFile(path.join(__dirname, "../frontend/public/index.html", { root: "public" }));
 });
+
 
 server.get("*", (req, res) => {
     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
-    res.sendFile(path.resolve("public/index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/public/index.html"));
 });
+// server.get("*", (req, res) => {
+//     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
+//     res.sendFile(path.resolve("public/index.html"));
+// });
 
 server.listen(port, () => {
     if (DEBUG_MODE) console.log(`Server running at http://localhost:${port}`);

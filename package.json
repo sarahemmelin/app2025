@@ -1,9 +1,9 @@
 {
     "type": "module",
     "scripts": {
-        "start": "node server.mjs",
-        "dev": "set NODE_ENV=development && node server.mjs",
-        "local": "node --env-file=.env init/init.mjs"
+        "start": "node backend/server.mjs",
+        "dev": "set NODE_ENV=development && node backend/server.mjs",
+        "local": "node --env-file=.env backend/init/init.mjs"
     },
     "dependencies": {
         "dotenv": "16.4.7",
