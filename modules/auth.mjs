@@ -1,3 +1,6 @@
+//TODO 
+//1. Rydde opp i statuskoder (skal importeres fra en felles fil).
+
 import crypto from 'crypto';
 
 const activeTokens = new Set();
