@@ -2,7 +2,6 @@ class LoginComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
-        console.log("[LoginComponent] Konstruktør kjøres...");
         this.loadTemplate();
     }
 
@@ -23,32 +22,41 @@ class LoginComponent extends HTMLElement {
                 this.shadowRoot.appendChild(clone);
                 this.setupEventListeners();
             } else {
-                console.error("[LoginComponent] Fant ikke template-elementet.");
+                console.error("[ERROR] Fant ikke template-elementet.");
             }
         } catch (error) {
-            console.error("[LoginComponent] Feil ved lasting av template:", error);
+            console.error("[ERROR] Feil ved lasting av template:", error);
         }
     }
 
     setupEventListeners() {
         const loginBtn = this.shadowRoot.getElementById("loginBtn");
+    
         if (loginBtn) {
-            console.log("[LoginComponent] Knytter eventlistener til login-knappen!");
+            console.log("[LoginComponent] Legger til eventlistener på knappen.");
             loginBtn.addEventListener("click", () => this.loginEvent());
         } else {
             console.error("[LoginComponent] Fant ikke login-knappen!");
         }
     }
     
-    async loginEvent() {
-        const email = this.shadowRoot.getElementById("email").value;
-        const password = this.shadowRoot.getElementById("password").value; 
+    loginEvent() {
+        const emailInput = this.shadowRoot.getElementById("email");
+        const passwordInput = this.shadowRoot.getElementById("password");
+
+        if (!emailInput || !passwordInput) {
+            console.error("[LoginComponent] Fant ikke input-feltene!");
+            return;
+        }
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
         this.dispatchEvent(new CustomEvent("loginAttempt", {
             detail: { email, password },
             bubbles: true,
             composed: true
-        }));    
+        }));
     }
 }
 
