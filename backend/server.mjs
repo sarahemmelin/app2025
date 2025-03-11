@@ -52,7 +52,7 @@ server.use((req, res, next) => {
     next();
 });
 
-server.use(express.static(path.join(__dirname, "../frontend/public")));
+server.use(express.static(path.resolve(__dirname, "../frontend/public")));
 
 
 
@@ -65,11 +65,13 @@ server.use("/shop/", shopAPI);
 server.use("/", authAPI);
 
 server.get("/", (req, res) => {
+    console.log("[DEBUG] Forespørsel til /");
     res.sendFile(path.join(__dirname, "../frontend/public/index.html", { root: "public" }));
 });
 
 
 server.get("*", (req, res) => {
+    console.log("[DEBUG] Forespørsel til ukjent rute: ", req.url);
     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
     res.sendFile(path.join(__dirname, "../frontend/public/index.html"));
 });
