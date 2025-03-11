@@ -1,10 +1,6 @@
-import {
-  initLoginView,
-  handleLogout,
-} from "../view_controllers/loginController.mjs";
+import {initLoginView, handleLogout,} from "../view_controllers/loginController.mjs";
 import { initProductView } from "../view_controllers/productController.mjs";
-
-const DEBUG_MODE = true;
+import { DEBUG_MODE } from "../config/clientConfig.mjs";
 
 export function navigateTo(path) {
   if (!path.startsWith("/")) {
@@ -12,14 +8,11 @@ export function navigateTo(path) {
   }
 
   if (window.location.pathname === path) {
-    if (DEBUG_MODE)
-      console.log(
-        `[DEBUG router] Ignorerer routing – vi er allerede på ${path}`
-      );
+    if (DEBUG_MODE) console.log(`[DEBUG router] Ignorerer routing – vi er allerede på ${path}`);
     return;
   }
 
-  console.log("[DEBUG router] Navigerer til:", path);
+  if (DEBUG_MODE) console.log("[DEBUG router] Navigerer til:", path);
   window.history.pushState({}, "", path);
   handleRouting();
 }
@@ -31,19 +24,16 @@ export function handleRouting() {
     return;
   }
 
-  console.log(
-    "[DEBUG router] Før routing, mainComponent:",
-    mainComponent.innerHTML
-  );
+  if (DEBUG_MODE) console.log("[DEBUG router] Før routing, mainComponent:", mainComponent.innerHTML);
 
   const path = window.location.pathname;
+  const isLoggedIn = !!localStorage.getItem("authToken");
 
-  // Fjerner unødvendige nye instanser
-  if (document.querySelector("admin-view") && path === "/products") {
-    console.log(
-      "[DEBUG router] Admin-view eksisterer allerede, hopper over ny rendering."
-    );
-    return; // Forhindrer at en ny admin-view legges til
+
+  if (path === "/products" && !isLoggedIn) {
+    console.warn("[DEBUG router] Ingen token funnet! Omdirigerer til login.");
+    navigateTo("/login");
+    return;
   }
 
   mainComponent.innerHTML = "";
@@ -51,23 +41,16 @@ export function handleRouting() {
   switch (path) {
     case "/":
     case "/login":
-      console.log("[DEBUG router] Kaller initLoginView()...");
+      if (DEBUG_MODE) console.log("[DEBUG router] Kaller initLoginView()...");
       mainComponent.appendChild(document.createElement("login-component"));
       initLoginView();
       break;
 
     case "/products":
-      console.log("[DEBUG router] Legger til admin-view...");
-
-      if (!document.querySelector("admin-view")) {
-        const adminView = document.createElement("admin-view");
-        adminView.initViewFunction = initProductView;
-        mainComponent.appendChild(adminView);
-      } else {
-        console.log(
-          "[DEBUG router] Admin-view eksisterer allerede, hopper over ny rendering."
-        );
-      }
+      if (DEBUG_MODE) console.log("[DEBUG router] Legger til admin-view...");
+      const adminView = document.createElement("admin-view");
+      adminView.initViewFunction = initProductView;
+      mainComponent.appendChild(adminView);
       break;
 
     default:
@@ -75,15 +58,12 @@ export function handleRouting() {
       break;
   }
 
-  console.log(
-    "[DEBUG router] Etter routing, mainComponent:",
-    mainComponent.innerHTML
-  );
+  console.log("[DEBUG router] Etter routing, mainComponent:", mainComponent.innerHTML);
 }
 
+
 document.addEventListener("navigate", (event) => {
-  if (DEBUG_MODE)
-    console.log("[DEBUG router] Navigasjon event fanget:", event.detail.path);
+  if (DEBUG_MODE) console.log("[DEBUG router] Navigasjon event fanget:", event.detail.path);
   navigateTo(event.detail.path);
 });
 
