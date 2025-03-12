@@ -15,7 +15,7 @@ export async function fetchProducts() {
 }
 
 async function protectedFetch(url, options = {}) {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken");
     if (!token) {
         console.error("Ingen token funnet! Brukeren er ikke logget inn.");
         return;
