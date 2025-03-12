@@ -45,63 +45,36 @@ export async function getProduct(req, res) {
 
 export async function createProduct(req, res) {
   try {
-    if (DEBUG_MODE) console.log("[DEBUG shopController] Mottatt body:", req.body);
-    let { 
-      navn, 
-      kategori, 
-      pris, 
-      lager, 
-      farge, 
-      pigmenter, 
-      beskrivelse, 
-      sku } 
-      = req.body;
 
-      const products = await getFileData(filePath);
+    const { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse } = req.body;
+     
+    if (!produktnavn) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Produktnavn" });
+    if (!sku) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: SKU-nummer" });
+    if (!pris) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Pris" });
+    
 
-    kategori = kategori || ["ukjent"];
+    const query = `
+    INSERT INTO produkter (produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    RETURNING *;
+    `;
+    // const products = await getFileData(filePath);
+
     if (!Array.isArray(pigmenter)) {
       pigmenter = pigmenter ? [pigmenter] : [];
   }
 
+  const values = [produktnavn, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse, sku];
+  const result = await pool.query(query, values);  
 
-    if (!navn || !pris || !sku) {
-      console.warn("[WARN] Mangler påkrevde felt");
-      return res.status(400).json({ message: "Mangler påkrevde felt" });
-    }
 
-    let newId = "1";
-    if (products && Object.keys(products).length > 0) {
-        const existingIds = Object.keys(products).map(Number);
-        const highestId = Math.max(...existingIds);
-        newId = String(highestId + 1);
-    }
-
-    products[newId] = {
-      id: newId,
-      sku,
-      navn,
-      kategori: kategori || ["ukjent"],
-      pris: Number(pris),
-      lager: Number(lager) || 0,
-      farge: farge || "Ukjent",
-      pigmenter,
-      beskrivelse: beskrivelse || "Ingen beskrivelse",
-    };
-
-    await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-    if (DEBUG_MODE) console.log("[DEBUG shopController] Produkt lagret:", req.body);
-    res
-      .status(201)
-      .json({
+    res.status(201).json({
         message: `Produkt '${navn}' lagt til`,
         produkt: products[newId],
       });
   } catch (error) {
-    console.error("[ERROR] Feil ved lagring av produkt", error);
-    res
-      .status(500)
-      .json({ message: "Feil ved lagring av produkt", error: error.message });
+    console.error("[ERROR shopController] Feil ved lagring av produkt", error);
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved lagring av produkt", error: error.message });
   }
 }
 
