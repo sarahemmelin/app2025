@@ -64,7 +64,7 @@ export async function createProduct(req, res) {
       pigmenter = pigmenter ? [pigmenter] : [];
   }
 
-  const values = [produktnavn, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse, sku];
+  const values = [produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse, sku];
   const result = await pool.query(query, values);  
 
 
