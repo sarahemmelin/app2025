@@ -1,9 +1,10 @@
 //TODO: 
 //1. Legge inn DEBUG_MODE i alle filer. 
 //2. Rydde opp i statuskoder (skal komme fra en felles fil).
-//3. Alle fetchene skal samles i en fetch. Avventer med å rydde i denne filen videre.
+//3. Kan alle fetcher på backend samles i én fetch? 
 //4. Vurdere å rydde opp i feilhåndtering (hvis tid).
 
+import pool from "../config/dbConnect.mjs";
 import fs from "fs/promises";
 import { DEBUG_MODE } from "../config/debug.mjs";
 import HTTP_CODES from "../utils/httpCodes.mjs";
@@ -16,9 +17,10 @@ const filePath = path.join(__dirname, "../data/shopProducts.json");
 
 export async function getAllProducts(req, res) {
   try {
-    const products = await getFileData(filePath);
-    res.json(Object.values(products));
-
+    const result = await pool.query("SELECT * FROM produkter");
+    res.json(result.rows);
+    // const products = await getFileData(filePath);
+    // res.json(Object.values(products));
   } catch (error) {
     console.error("[ERROR shopController], Feil ved henting av produkter", error);
     res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved henting av produkter", error });
