@@ -18,6 +18,7 @@ export function navigateTo(path) {
 }
 
 export function handleRouting() {
+  console.log("[DEBUG router] Før routing, mainComponent:", document.getElementById("mainComponent").innerHTML);
   const mainComponent = document.getElementById("mainComponent");
   if (!mainComponent) {
     console.error("[ERROR router] Fant ikke #mainComponent i DOM.");
@@ -27,7 +28,7 @@ export function handleRouting() {
   if (DEBUG_MODE) console.log("[DEBUG router] Før routing, mainComponent:", mainComponent.innerHTML);
 
   const path = window.location.pathname;
-  const isLoggedIn = !!localStorage.getItem("authToken");
+  const isLoggedIn = !!sessionStorage.getItem("authToken");
 
 
   if (path === "/products" && !isLoggedIn) {
@@ -57,7 +58,6 @@ export function handleRouting() {
       console.error(`[ERROR router] Ruten "${path}" er ikke definert.`);
       break;
   }
-
   console.log("[DEBUG router] Etter routing, mainComponent:", mainComponent.innerHTML);
 }
 
