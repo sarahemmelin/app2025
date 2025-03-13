@@ -30,38 +30,25 @@ class AddProductForm extends HTMLElement {
     addListeners() {
       const form = this.shadowRoot.getElementById('addProductForm');
       if (form) {
-
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          const formData = new FormData(form);
-          const newProduct = Object.fromEntries(formData.entries());
-          const token = localStorage.getItem('authToken');
-
-          if (!token) {
-            console.error('[ERROR] Ingen token funnet! Brukeren er ikke logget inn.');
-            return;
-          }
+          form.addEventListener('submit', (e) => {
+              e.preventDefault();
   
-          try {
-            const response = await fetch('/shop/', {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` 
-               },
-              body: JSON.stringify(newProduct)
-            });
-            if (!response.ok) {
-              throw new Error(`[ERROR] Feil ved oppretting av produkt: ${response.status}`);
-            }
-            const result = await response.json();
-          } catch (error) {
-            console.error('[ERROR] Feil ved oppretting av produkt:', error);
-          }
-        });
+              const formData = new FormData(form);
+              const newProduct = Object.fromEntries(formData.entries());
+  
+              console.log("[DEBUG add-product-form] Sender produktdata til kontroller:", newProduct);
+  
+              this.dispatchEvent(new CustomEvent("addProduct", {
+                  detail: newProduct,
+                  bubbles: true,
+                  composed: true
+              }));
+  
+              form.reset();
+          });
       }
-    }
+  }
+  
   }
   
   customElements.define('add-product-form', AddProductForm);
