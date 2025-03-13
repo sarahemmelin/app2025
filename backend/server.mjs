@@ -61,7 +61,7 @@ server.get("/offline.html", (req, res) => {
 });
 
 
-server.use("/shop/", shopAPI);
+server.use("/products", shopAPI);
 server.use("/", authAPI);
 
 server.get("/", (req, res) => {
@@ -72,13 +72,13 @@ server.get("/", (req, res) => {
 
 server.get("*", (req, res) => {
     console.log("[DEBUG] Forespørsel til ukjent rute: ", req.url);
+    if (req.url.startsWith("/api") || req.url.startsWith("/products")) {
+        return next();
+    }
     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
     res.sendFile(path.join(__dirname, "../frontend/public/index.html"));
 });
-// server.get("*", (req, res) => {
-//     eventLogger(`Omdirigerer ${req.url} til /index.html`, LOGG_LEVELS.IMPORTANT);
-//     res.sendFile(path.resolve("public/index.html"));
-// });
+
 
 server.listen(port, () => {
     if (DEBUG_MODE) console.log(`Server running at http://localhost:${port}`);
