@@ -42,9 +42,12 @@ export async function handleLogin(event) {
         console.error("[ERROR loginController] Ingen token returnert fra backend!");
         return;
       }
+      console.log("[DEBUG loginController] Token rett FØR lagring:", sessionStorage.getItem("authToken"));
 
       sessionStorage.setItem("authToken", result.token);
       if (DEBUG_MODE) console.log("[DEBUG loginController] Token lagret:", result.token);
+
+      console.log("[DEBUG loginController] Token rett ETTER lagring:", sessionStorage.getItem("authToken"));
 
       updateLoginStatus(result.message);
       navigateTo("/products");
@@ -70,6 +73,8 @@ export function handleLogout() {
 }
 
 export function checkLoginStatus() {
+  console.log("[DEBUG loginController checkLoginStatus()] Token blir spurt etter: ", sessionStorage.getItem("authToken"));
+
   const token = sessionStorage.getItem("authToken");
 
   if (!token) {
