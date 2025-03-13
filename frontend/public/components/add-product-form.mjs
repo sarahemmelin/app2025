@@ -43,6 +43,7 @@ class AddProductForm extends HTMLElement {
                   bubbles: true,
                   composed: true
               }));
+              console.log("[DEBUG add-product-form] Event sendt med data:", newProduct);
   
               form.reset();
           });

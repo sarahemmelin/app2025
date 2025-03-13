@@ -2,15 +2,19 @@
 // [] productController har [ERROR productController] for Error-meldinger. [DEBUG productController] for debug-meldinger.
 // [] Sette alle console.log inn i en if - sjekk for debugMode (hvis noen).
 // [] Lage en felles fil for DEBUG_MODE slik at den kan toggles fra ett sted.
-// [] Rydde opp i kode, all fetch skal skje fra ett sted KUN. 
+// [] Rydde opp i kode, all fetch skal skje fra ett sted KUN.
 
-import { fetchProducts } from "../api/api.mjs";
+import { fetchProducts, addProduct } from "../api/api.mjs";
 import { DEBUG_MODE } from "../config/clientConfig.mjs";
 
 export async function initProductView() {
   try {
     const products = await fetchProducts();
     renderProducts(products);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setupProductForm();
+
   } catch (error) {
     console.error("[ERROR productController] Feil ved henting av produkter:", error);
   }
@@ -57,7 +61,7 @@ function createProductCard(product) {
   const productCard = document.createElement("product-card");
 
   productCard.setAttribute("id", product.id);
-  productCard.setAttribute("navn", product.navn || "Ukjent produkt");
+  productCard.setAttribute("produktnavn", product.produktnavn || "Ukjent produkt");
   productCard.setAttribute("sku", product.sku || "Ukjent SKU");
   productCard.setAttribute("lager", product.lager || "0");
   productCard.setAttribute("pris", product.pris || "0");
@@ -71,4 +75,81 @@ function createProductCard(product) {
   }
 
   return productCard;
+}
+
+async function setupProductForm() {
+
+  const adminView = document.querySelector("admin-view");
+  if (!adminView) {
+    console.error("[ERROR productController] Fant ikke <admin-view> i DOM.");
+    return;
+  }
+
+  const addForm = adminView.shadowRoot?.querySelector("add-product-form");
+  if (!addForm) {
+    console.error("[ERROR productController] Fant ikke <add-product-form> i shadow DOM.");
+    return;
+  }
+
+  await waitForShadowDOM(addForm);
+  const form = addForm.shadowRoot?.getElementById("addProductForm");
+
+  if (!form) {
+    console.error("[ERROR productController] Fant ikke skjemaet i shadowRoot.");
+    return;
+  }
+
+  console.log("[DEBUG productController] Skjema funnet, lytter til submit...");
+
+  addForm.addEventListener("addProduct", async (event) => {
+    event.preventDefault();
+  
+    console.log("[DEBUG productController] Mottok produktdata fra add-product-form:", event.detail);
+  
+    const productData = event.detail;
+  
+    if (!productData) {
+      console.error("[ERROR productController] Mottok ingen data fra add-product-form!");
+      return;
+    }
+  
+    if (productData.navn) {
+      productData.produktnavn = productData.navn;
+      delete productData.navn; 
+    }
+  
+    if (productData.lager) {
+      productData.lagerstatus = productData.lager;
+      delete productData.lager;
+    }
+  
+    console.log("[DEBUG productController] Produktdata etter tilpasning:", productData);
+  
+    if (!productData.produktnavn || !productData.sku || !productData.pris) {
+      console.error("[ERROR productController] Produktdata mangler nødvendige felter:", productData);
+      return;
+    }
+  
+    const response = await addProduct(productData);
+  
+    if (response) {
+      console.log("[DEBUG productController] Produkt lagt til, oppdaterer visning!");
+      initProductView();
+    }
+  });
+}
+
+async function waitForShadowDOM(element) {
+  return new Promise((resolve) => {
+    if (element.shadowRoot) {
+      return resolve(element.shadowRoot);
+    }
+    const observer = new MutationObserver(() => {
+      if (element.shadowRoot) {
+        observer.disconnect();
+        resolve(element.shadowRoot);
+      }
+    });
+    observer.observe(element, { childList: true });
+  });
 }
