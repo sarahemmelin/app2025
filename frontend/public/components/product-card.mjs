@@ -52,9 +52,9 @@ class ProductCard extends HTMLElement {
         return;
       }
   
-      productName.textContent = this.getAttribute("navn") || "Ukjent produkt";
+      productName.textContent = this.getAttribute("produktnavn") || "Ukjent produkt";
       productSKU.textContent = this.getAttribute("sku") || "Ukjent";
-      productPrice.textContent = `${this.getAttribute("pris") || "Ukjent"} kr`;
+      productPrice.textContent = `${this.getAttribute("pris") || "Ukjent"}`;
       productDescription.textContent = this.getAttribute("beskrivelse") || "Ingen beskrivelse.";
       productStock.textContent = this.getAttribute("lager") || "0";
   
