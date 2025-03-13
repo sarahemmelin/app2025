@@ -24,7 +24,8 @@ export function authenticateToken(req, res, next) {
     }
 
     const token = authHeader.split(" ")[1];
-
+    console.log("[DEBUG auth] Token mottatt:", token);
+    
     if (!activeTokens.has(token)) {
         return res.status(403).json({ message: "Ugyldig eller utløpt token." });
     }
