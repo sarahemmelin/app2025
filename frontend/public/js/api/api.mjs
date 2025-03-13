@@ -1,11 +1,10 @@
 export async function fetchProducts() {
     try {
-        const response = await fetch("/shop/products");
+        const response = await fetch("/products");
         if (!response.ok) {
             throw new Error(`Feil ved henting av produkter: ${response.status}`);
         }
         const products = await response.json();
-        console.log("Produkter hentet:", products);
         return products;
     }
     catch (error) {
@@ -26,21 +25,29 @@ async function protectedFetch(url, options = {}) {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
     };
-
+    console.warn("Token som sendes i header:", token);
     return fetch(url, options);
 }
 
 export async function addProduct(productData) {
-    const response = await protectedFetch("/shop/", {
+    console.log("[DEBUG api] Sender produktdata:", productData);
+    const response = await protectedFetch("/products", {
         method: "POST",
         body: JSON.stringify(productData)
     });
 
-    return response.json();
+    if (!response.ok) {
+        throw new Error(`Feil ved lagring av produkt: ${response.status}`);
+        return null;
+    }
+
+    const jsonResponse = await response.json();
+    console.log("[DEBUG api] Respons fra server:", jsonResponse);
+    return jsonResponse;
 }
 
 export async function deleteProduct(productId) {
-    const response = await protectedFetch(`/shop/${productId}`, {
+    const response = await protectedFetch(`/products/${productId}`, {
         method: "DELETE"
     });
 
