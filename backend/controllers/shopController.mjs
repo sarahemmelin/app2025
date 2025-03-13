@@ -19,8 +19,7 @@ export async function getAllProducts(req, res) {
   try {
     const result = await pool.query("SELECT * FROM produkter");
     res.json(result.rows);
-    // const products = await getFileData(filePath);
-    // res.json(Object.values(products));
+
   } catch (error) {
     console.error("[ERROR shopController], Feil ved henting av produkter", error);
     res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved henting av produkter", error });
@@ -44,33 +43,41 @@ export async function getProduct(req, res) {
 }
 
 export async function createProduct(req, res) {
+  console.log("[DEBUG shopController] POST /products mottatt med data:", req.body);
   try {
 
-    const { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse } = req.body;
+    let { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse } = req.body;
      
     if (!produktnavn) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Produktnavn" });
     if (!sku) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: SKU-nummer" });
     if (!pris) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Pris" });
     
+    const skuCheckQuery = `SELECT * FROM public.produkter WHERE sku = $1`;
+    const skuCheckResult = await pool.query(skuCheckQuery, [sku]);
+
+    if (skuCheckResult.rows.length > 0) {
+      return res.status(409).json({ message: `SKU '${sku}' er allerede i bruk.` });
+    }
+
+    
+    if (!Array.isArray(pigmenter)) {
+        pigmenter = pigmenter ? [pigmenter] : [];
+    }
 
     const query = `
-    INSERT INTO produkter (produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse)
+    INSERT INTO public.produkter (produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING *;
     `;
-    // const products = await getFileData(filePath);
+   
 
-    if (!Array.isArray(pigmenter)) {
-      pigmenter = pigmenter ? [pigmenter] : [];
-  }
-
-  const values = [produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse, sku];
+  const values = [produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse];
   const result = await pool.query(query, values);  
 
 
     res.status(201).json({
-        message: `Produkt '${navn}' lagt til`,
-        produkt: products[newId],
+        message: `Produkt '${produktnavn}' lagt til`,
+        produkt: result.rows[0],
       });
   } catch (error) {
     console.error("[ERROR shopController] Feil ved lagring av produkt", error);
