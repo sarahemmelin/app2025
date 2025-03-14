@@ -1,5 +1,4 @@
-//TODO 
-//1. Rydde opp i statuskoder (skal importeres fra en felles fil).
+
 import HTTP_CODES from "../utils/httpCodes.mjs";
 import crypto from 'crypto';
 
