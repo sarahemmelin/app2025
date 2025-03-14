@@ -1,8 +1,7 @@
 //TODO: 
 //1. Legge inn DEBUG_MODE i alle filer. 
 //2. Rydde opp i statuskoder (skal komme fra en felles fil).
-//3. Kan alle fetcher på backend samles i én fetch? 
-//4. Vurdere å rydde opp i feilhåndtering (hvis tid).
+//3. Rydde opp i kode som ikke brukes lengre
 
 import pool from "../config/dbConnect.mjs";
 import fs from "fs/promises";
@@ -32,13 +31,13 @@ export async function getProduct(req, res) {
     const product = products[req.params.id];
 
     if (!product)
-      return res.status(404).json({ message: "Produkt ikke funnet" });
+      return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Produkt ikke funnet" });
 
     res.json(product);
     
   } catch (error) {
     console.error("[ERROR], Feil ved henting av produkter", error);
-    res.status(500).json({ message: "Feil ved henting av produkter", error });
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved henting av produkter", error });
   }
 }
 
@@ -46,20 +45,24 @@ export async function createProduct(req, res) {
   console.log("[DEBUG shopController] POST /products mottatt med data:", req.body);
   try {
 
-    let { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse } = req.body;
+    let { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lager, lagerstatus, beskrivelse } = req.body;
      
     if (!produktnavn) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Produktnavn" });
     if (!sku) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: SKU-nummer" });
     if (!pris) return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Pris" });
+
+
+    if (!lagerstatus) {
+      lagerstatus = (lager && parseInt(lager) > 0) ? 1 : 0;
+    }
     
     const skuCheckQuery = `SELECT * FROM public.produkter WHERE sku = $1`;
     const skuCheckResult = await pool.query(skuCheckQuery, [sku]);
 
     if (skuCheckResult.rows.length > 0) {
-      return res.status(409).json({ message: `SKU '${sku}' er allerede i bruk.` });
+      return res.status(HTTP_CODES.CLIENT_ERROR.CONFLICT).json({ message: `SKU '${sku}' er allerede i bruk.` });
     }
 
-    
     if (!Array.isArray(pigmenter)) {
         pigmenter = pigmenter ? [pigmenter] : [];
     }
@@ -70,12 +73,10 @@ export async function createProduct(req, res) {
     RETURNING *;
     `;
    
-
   const values = [produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lagerstatus, beskrivelse];
   const result = await pool.query(query, values);  
 
-
-    res.status(201).json({
+    res.status(HTTP_CODES.SUCCESS.CREATED).json({
         message: `Produkt '${produktnavn}' lagt til`,
         produkt: result.rows[0],
       });
@@ -84,32 +85,71 @@ export async function createProduct(req, res) {
     res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved lagring av produkt", error: error.message });
   }
 }
+export async function updateProduct(req, res) {
+  try {
+    const { id } = req.params;
+    const { produktnavn, sku, lager, pris, beskrivelse } = req.body;
+    
+    if (!produktnavn || !sku || !pris) {
+      return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Produktnavn, SKU eller Pris" });
+    }
+    
+    const lagerstatus = (lager && parseInt(lager) > 0) ? 1 : 0;
+    
+    const updateQuery = `
+      UPDATE public.produkter
+      SET produktnavn = $1,
+          sku = $2,
+          pris = $3,
+          beskrivelse = $4,
+          lagerstatus = $5,
+          oppdatert = NOW()
+      WHERE id = $6
+      RETURNING *;
+    `;
+    const values = [produktnavn, sku, pris, beskrivelse, lagerstatus, id];
+    
+    const result = await pool.query(updateQuery, values);
+    
+    if (result.rows.length === 0) {
+      return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Produkt ikke funnet" });
+    }
+    
+    res.json({
+      message: "Produkt oppdatert",
+      produkt: result.rows[0]
+    });
+  } catch (error) {
+    console.error("[ERROR shopController] Feil ved oppdatering av produkt", error);
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved oppdatering av produkt", error: error.message });
+  }
+}
 
 export async function deleteProduct(req, res) {
   try {
     const { id } = req.params;
-    const products = await getFileData(filePath);
-
-    if (!products[id]) {
-      return res.status(404).json({ message: `Produkt med ID ${id} ikke funnet` });
-    }
 
     if (id === "0") {
-      return res.status(403).json({ message: "Dummy-produktet kan ikke slettes!" });
+      return res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).json({ message: "Dummy-produktet kan ikke slettes!" });
     }
 
-    delete products[id];
+    const productResult = await pool.query("SELECT * FROM produkter WHERE id = $1", [id]);
+    if (productResult.rows.length === 0) {
+      return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: `Produkt med ID ${id} ikke funnet` });
+    }
 
-    await fs.writeFile(filePath, JSON.stringify(products, null, 2));
-
-    if (DEBUG_MODE) console.log(`[DEBUG shopController] Produkt med ID ${id} slettet.`);
-    res.json({ message: `Produkt med ID ${id} slettet` });
-
+    const deleteQuery = "DELETE FROM produkter WHERE id = $1 RETURNING *";
+    const deleteResult = await pool.query(deleteQuery, [id]);
+    if (DEBUG_MODE) {
+      console.log(`[DEBUG shopController] Produkt med ID ${id} slettet.`);
+    }
+    res.json({ message: `Produkt med ID ${id} slettet`, produkt: deleteResult.rows[0] });
   } catch (error) {
-    console.error("[ERROR] Feil ved sletting av produkt", error);
-    res.status(500).json({ message: "Feil ved sletting av produkt", error: error.message });
+    console.error("[ERROR shopController] Feil ved sletting av produkt", error);
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved sletting av produkt", error: error.message });
   }
 }
+
 
 
 const getFileData = async (filePath) => {
