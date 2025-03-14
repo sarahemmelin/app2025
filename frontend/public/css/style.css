@@ -1,76 +1,242 @@
-/* PRODUCTS ================================================*/
+/* ALL CSS er en blanding av AI - generert og "håndskrevet kode"
+ === GLOBAL STYLES === */
+:root {
+    --background-light: #f8f8f8;
+    --background-dark: #ffffff;
+    --text-color: #222;
+    --text-muted: #555;
+    --border-color: #ddd;
+    --button-color: #333;
+    --button-hover-color: #000;
+    --card-background: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --border-radius: 6px;
+}
 
-/* PRODUCT CARD --------------------------------------------*/
+/* === BODY & LAYOUT === */
+h1 {
+    
+    position: relative;
+    z-index: 20; /* Sørger for at den ligger over sidebar */
+    margin-left: 300px; /* Skyver den ut fra under sidebar */
+    padding-left: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    
+}
+
+
+html, body {
+    background: var(--background-dark);
+    color: var(--text-color);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden; /* Fjerner horisontal scrolling */
+    overflow: hidden; /* Hindrer hele siden i å scrolle */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-y: auto; /* Lar hele siden scrolle */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* === HOVEDKOMPONENT === */
+#mainComponent {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+/* === ADMIN PANEL – HINDRER OVERLAPP === */
+.admin-container {
+    display: flex;
+    min-height: 100vh; /* Sikrer at innholdet ikke kuttes */
+    width: 100%;
+    overflow: hidden;
+}
+
+/* === FIX FOR SIDEBAR === */
+.sidebar {
+    width: 250px;
+    background-color: #222;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000; /* Sørger for at den alltid ligger over */
+}
+
+/* === INNHOLD – SKYVER UT FRA SIDEBAR === */
+.content {
+    flex-grow: 1;
+    margin-left: 300px; /* Skyver innholdet ut fra sidebar */
+    width: calc(100% - 300px); /* Tar høyde for sidebar */
+    padding: 20px;
+    overflow-y: visible; /* Sikrer at den ikke skaper en egen scroll */
+    max-height: none; /* Hindrer kunstig begrensning */
+    box-sizing: border-box;
+}
+
+/* === HEADER === */
+h1 {
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 5px 0 20px 0;
+    padding-left: 10px;
+    padding-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+/* === PRODUKTKORT – FIKSER KNAPPER === */
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start; /* Holder kortene til venstre */
+    align-items: flex-start;
+    padding: 2em;
+}
+
 .product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5em;
     width: 300px;
-    background-color: var(--card-background, white);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+    background-color: var(--card-background);
+    box-shadow: 2px 2px 10px var(--shadow-color);
     display: flex;
     flex-direction: column;
     text-align: left;
+    position: relative;
 }
 
-.product-header {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--primary-color, #333);
+/* === KNAPPER PÅ PRODUKTKORT === */
+.product-card button {
+    width: 100%; /* Gjør at knappene fyller bredden */
+    margin-top: 8px; /* Litt luft mellom knappene */
+    padding: 10px;
+    font-size: 1rem;
 }
 
-.product-info {
-    font-size: 0.95em;
-    color: #444;
-    margin-bottom: 4px;
+/* === PRODUKTKORT HOVER === */
+.product-card:hover {
+    transform: scale(1.02);
 }
 
-.extra-attributes {
-    margin-top: 10px;
+/* === STYLING PÅ `addProductForm` === */
+#addProductForm {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5em;
+    max-width: 500px;
+    width: 100%;
+    background-color: var(--card-background);
+    box-shadow: 2px 2px 10px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    position: relative;
 }
 
-.edit-button {
-    padding: 6px 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--button-color, #007bff);
+form#addProductForm {
+    display: flex;
+    width: 300px;
+}
+
+#addProductForm textarea,
+#addProductForm button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+}
+
+#addProductForm input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+}
+
+/* === KNAPPER === */
+button {
+    padding: 8px 12px;
+    border: 1px solid var(--button-color);
+    border-radius: var(--border-radius);
+    background-color: var(--button-color);
     color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* === KNAPPER PÅ PRODUKTKORT === */
+.product-card button {
+    width: 100%; /* Gjør at knappene fyller bredden */
+    margin-top: 8px; /* Litt luft mellom knappene */
+    padding: 10px;
+    font-size: 1rem;
+}
+
+/* === LOGIN STYLING – GIR DEN ET PENT KORT === */
+#login-template {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full høyde av skjermen */
+}
+
+#login-form {
+    max-width: 320px;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: 2px 2px 10px var(--shadow-color);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+#login-form h2 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+#login-form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+#login-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
-.edit-button:hover {
-    background-color: var(--button-hover-color, #0056b3);
-}
-
-/* PRODUCT FORM --------------------------------------------*/
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    max-width: 400px;
-    margin: 1rem auto;
-  }
-  input, textarea, button {
-    padding: 0.5rem;
-    font-size: 1rem;
-  }
-
-/* LOGIN FORM --------------------------------------------*/
-:host {
-    display: block;
-    font-family: Arial, sans-serif;
-    max-width: 300px;
-    margin: auto;
-    text-align: center;
-}
-input, button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
+#login-form button:hover {
+    background-color: var(--button-hover-color);
 }
