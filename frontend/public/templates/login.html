@@ -1,8 +1,12 @@
 <template id="login-template">
     <link rel="stylesheet" href="/css/style.css">
-    <h2>Logg inn</h2>
-    <input type="email" id="email" placeholder="E-post" required>
-    <input type="password" id="password" placeholder="Passord" required>
-    <button id="loginBtn">Logg inn</button>
-    <p id="status"></p>
+    <div id="login-form-container">
+        <form id="login-form">
+            <h2>Logg inn</h2>
+            <input type="email" id="email" placeholder="E-post" required />
+            <input type="password" id="password" placeholder="Passord" required />
+            <button id="loginBtn">Logg inn</button>
+            <p id="status"></p>
+        </form>
+  </div>
 </template>
