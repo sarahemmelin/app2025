@@ -1,3 +1,7 @@
+//TODO: 
+//1. Vanguard bør kanskje lagre sin blacklist i databasen, og ikke i minnet, slik at den overlever server restarts.
+//2. Implementere dette hvis tid! 
+
 import ReadableTime from "../utils/translateTime.mjs";
 import { Worker } from "node:worker_threads";
 import HTTP_CODES from "../utils/httpCodes.mjs";
