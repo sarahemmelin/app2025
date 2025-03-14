@@ -8,6 +8,7 @@ import {
 export async function initProductView() {
   try {
     const products = await fetchProducts();
+    console.log("[DEBUG] Produkter fra API:", products);
     renderProducts(products);
   } catch (error) {
     console.error("[ERROR productController] Feil ved henting av produkter:", error);
@@ -15,6 +16,7 @@ export async function initProductView() {
 }
 
 function renderProducts(products) {
+  console.log("[DEBUG] Produkter som skal vises i DOM:", products);
   const adminView = document.querySelector("admin-view");
   if (!adminView) return console.error("[ERROR productController] Fant ikke <admin-view> i DOM.");
 
@@ -29,6 +31,7 @@ function renderProducts(products) {
     productContainer.innerHTML = "<p>Ingen produkter tilgjengelig.</p>";
   } else {
     products.forEach((product) => {
+      console.log("[DEBUG] Legger til produktkort:", product);
       if (!product.id || !product.produktnavn) {
         return;
       }
@@ -36,13 +39,17 @@ function renderProducts(products) {
       const productCard = document.createElement("product-card");
       Object.entries({
         id: product.id,
-        produktnavn: product.produktnavn || "Ukjent produkt",
-        sku: product.sku || "Ukjent SKU",
-        lager: product.lager || "0",
-        pris: product.pris || "0",
-        beskrivelse: product.beskrivelse || "Ingen beskrivelse",
-      }).forEach(([key, value]) => productCard.setAttribute(key, value));
-
+        produktnavn: product.produktnavn,
+        sku: product.sku,
+        lager: product.lager,
+        pris: product.pris,
+        beskrivelse: product.beskrivelse,
+      }).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          productCard.setAttribute(key, value);
+        }
+      });
+      console.log("[DEBUG] Produktkort-ID før setting:", product.id);
       productContainer.appendChild(productCard);
     });
   }

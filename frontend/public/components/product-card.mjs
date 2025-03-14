@@ -4,16 +4,19 @@ class ProductCard extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.editing = false;
-
-    if (!this.getAttribute("id")) {
-      console.warn("[WARNING] Produktkort opprettet uten ID, legges ikke til i DOM");
-      return;
-    }
-      this.render();
   }
 
-  static templateCache = {};
+  connectedCallback() {
+    if (!this.getAttribute("id")) {
+      console.warn("[WARNING] Produktkort opprettet uten ID, debug:", this);
+      return;
+    }
 
+    this.render();
+  }
+
+
+  static templateCache = {};
   static get observedAttributes() {
     return ["produktnavn", "sku", "pris", "lager", "beskrivelse", "id"];
   }
