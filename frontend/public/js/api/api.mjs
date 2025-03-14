@@ -1,55 +1,71 @@
-export async function fetchProducts() {
-    try {
-        const response = await fetch("/products");
-        if (!response.ok) {
-            throw new Error(`Feil ved henting av produkter: ${response.status}`);
+const HTTP_METHODS = {
+    GET: "GET",
+    POST: "POST",
+    PATCH: "PATCH",
+    PUT: "PUT",
+    DELETE: "DELETE"
+};
+
+const BASE_API = "/api";
+
+const API_ENDPOINTS = {
+    login: () => `${BASE_API}/login`,
+    products: () => `${BASE_API}/products`,
+    productById: (id) => `${BASE_API}/products/${id}`
+};
+
+async function apiRequest(endpoint, method = HTTP_METHODS.GET, data = null) {
+    const requestConfig = {
+        method,
+        headers: {
+            "Content-Type": "application/json"
         }
-        const products = await response.json();
-        return products;
-    }
-    catch (error) {
-        console.error("Feil ved henting av produkter:", error);
-        return [];
-    }
-}
-
-async function protectedFetch(url, options = {}) {
-    const token = sessionStorage.getItem("authToken");
-    if (!token) {
-        console.error("Ingen token funnet! Brukeren er ikke logget inn.");
-        return;
-    }
-
-    options.headers = {
-        ...options.headers,
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
     };
-    console.warn("Token som sendes i header:", token);
-    return fetch(url, options);
-}
 
-export async function addProduct(productData) {
-    console.log("[DEBUG api] Sender produktdata:", productData);
-    const response = await protectedFetch("/products", {
-        method: "POST",
-        body: JSON.stringify(productData)
-    });
+    if ([HTTP_METHODS.POST, HTTP_METHODS.PATCH, HTTP_METHODS.PUT].includes(method) && data) {
+        requestConfig.body = JSON.stringify(data);
+    }
 
-    if (!response.ok) {
-        throw new Error(`Feil ved lagring av produkt: ${response.status}`);
+    const token = sessionStorage.getItem("authToken");
+    if (token) {
+        requestConfig.headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    try {
+        const response = await fetch(endpoint, requestConfig);
+        if (!response.ok) {
+            throw new Error(`Feil ved forespørsel: ${response.status} - ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("[ERROR apiRequest]", error);
         return null;
     }
-
-    const jsonResponse = await response.json();
-    console.log("[DEBUG api] Respons fra server:", jsonResponse);
-    return jsonResponse;
 }
 
-export async function deleteProduct(productId) {
-    const response = await protectedFetch(`/products/${productId}`, {
-        method: "DELETE"
-    });
 
-    return response.json();
+export async function loginUser(email, password) {
+    return await apiRequest(API_ENDPOINTS.login(), HTTP_METHODS.POST, { email, password });
+}
+
+export async function fetchProducts() {
+    return await apiRequest(API_ENDPOINTS.products());
+}
+
+//Ikke implementert... Enda!
+// export async function getProductById(id) {
+//     return await apiRequest(API_ENDPOINTS.productById(id));
+// }
+
+
+export async function addProduct(productData) {
+    return await apiRequest(API_ENDPOINTS.products(), HTTP_METHODS.POST, productData);
+}
+
+export async function deleteProduct(id) {
+    return await apiRequest(API_ENDPOINTS.productById(id), HTTP_METHODS.DELETE);
+}
+
+export async function updateProduct(id, productData) {
+    return await apiRequest(API_ENDPOINTS.productById(id), HTTP_METHODS.PATCH, productData);
 }
