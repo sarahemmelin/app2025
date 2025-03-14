@@ -1,5 +1,6 @@
 ./notater.txt
 /node_modules
 /logs
+/backend/logs
 /data/blacklist.json
 .env
