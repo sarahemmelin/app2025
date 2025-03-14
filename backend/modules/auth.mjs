@@ -1,6 +1,6 @@
 //TODO 
 //1. Rydde opp i statuskoder (skal importeres fra en felles fil).
-
+import HTTP_CODES from "../utils/httpCodes.mjs";
 import crypto from 'crypto';
 
 const activeTokens = new Set();
@@ -20,14 +20,14 @@ export function hashPassword(password) {
 export function authenticateToken(req, res, next) {
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
-        return res.status(403).json({ message: "Manglende autorisasjon." });
+        return res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).json({ message: "Manglende autorisasjon." });
     }
 
     const token = authHeader.split(" ")[1];
     console.log("[DEBUG auth] Token mottatt:", token);
     
     if (!activeTokens.has(token)) {
-        return res.status(403).json({ message: "Ugyldig eller utløpt token." });
+        return res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).json({ message: "Ugyldig eller utløpt token." });
     }
     next();
 }
