@@ -47,16 +47,14 @@ self.addEventListener("install", async (e) => {
 });
 self.addEventListener("activate", async (e) => {
   console.log("[Service Worker] Rydder opp gamle cacher...");
-  e.waitUntil(
-    (async () => {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames
-          .filter((name) => name !== cacheID)
-          .map((name) => caches.delete(name))
-      );
-    })
-  );
+  e.waitUntil(async () => {
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames
+        .filter((name) => name !== cacheID)
+        .map((name) => caches.delete(name))
+    );
+  });
   self.clients.claim();
 });
 
@@ -65,6 +63,11 @@ self.addEventListener("fetch", async (e) => {
     console.log(`[Service Worker] Henter API direkte: ${e.request.url}`);
     return;
   }
+
+  if (!e.request.url.includes("api")) {
+    return;
+  }
+
   e.respondWith(
     (async () => {
       console.log(`[Service Worker] Behandler forespørsel: ${e.request.url}`);
