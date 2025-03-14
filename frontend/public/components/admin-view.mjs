@@ -1,8 +1,3 @@
-//TODO:
-// 1. AdminView har [ERROR adminView] og [ERROR HTTP-feil] for Error-meldinger. [DEBUG AdminView] for debug-meldinger.
-// 2. Sette alle console.log inn i en if - sjekk for debugMode.
-// 3. Vurdere om @param skal være med i kommentarene? Kan spørre Christian.
-
 const DEBUG_MODE = true;
 
 class AdminView extends HTMLElement {
@@ -73,6 +68,11 @@ class AdminView extends HTMLElement {
     });
   }
 
+  /**
+ * Initialiserer og viser en spesifikk admin-view funksjon.
+ * @param {Function} viewFunction - Funksjonen som initialiserer og rendrer den valgte viewen. 
+ * Per 14.03 er det kun produkt-viewet som initieres i denne funksjonen.
+ */
   initView(viewFunction) {
     if (typeof viewFunction !== "function") {
       console.error("[ERROR AdminView] Ugyldig view-funksjon.");
