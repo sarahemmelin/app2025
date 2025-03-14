@@ -85,43 +85,69 @@ export async function createProduct(req, res) {
     res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved lagring av produkt", error: error.message });
   }
 }
+
 export async function updateProduct(req, res) {
   try {
     const { id } = req.params;
-    const { produktnavn, sku, lager, pris, beskrivelse } = req.body;
-    
-    if (!produktnavn || !sku || !pris) {
-      return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "Mangler påkrevde felt: Produktnavn, SKU eller Pris" });
+    const { produktnavn, sku, pris, beskrivelse, lager } = req.body;
+
+    if (!produktnavn && !sku && !pris && !beskrivelse && !lager) {
+      return res.status(400).json({ message: "Ingen felt sendt for oppdatering." });
     }
-    
-    const lagerstatus = (lager && parseInt(lager) > 0) ? 1 : 0;
-    
+
+    let fields = [];
+    let values = [];
+    let index = 1;
+
+    if (produktnavn) {
+      fields.push(`produktnavn = $${index}`);
+      values.push(produktnavn);
+      index++;
+    }
+    if (sku) {
+      fields.push(`sku = $${index}`);
+      values.push(sku);
+      index++;
+    }
+    if (pris) {
+      fields.push(`pris = $${index}`);
+      values.push(pris);
+      index++;
+    }
+    if (beskrivelse) {
+      fields.push(`beskrivelse = $${index}`);
+      values.push(beskrivelse);
+      index++;
+    }
+    if (lager) {
+      fields.push(`lagerstatus = $${index}`);
+      values.push(parseInt(lager) > 0 ? 1 : 0);
+      index++;
+    }
+
+    values.push(id);
+
     const updateQuery = `
       UPDATE public.produkter
-      SET produktnavn = $1,
-          sku = $2,
-          pris = $3,
-          beskrivelse = $4,
-          lagerstatus = $5,
-          oppdatert = NOW()
-      WHERE id = $6
+      SET ${fields.join(", ")}, oppdatert = NOW()
+      WHERE id = $${index}
       RETURNING *;
     `;
-    const values = [produktnavn, sku, pris, beskrivelse, lagerstatus, id];
-    
+
     const result = await pool.query(updateQuery, values);
-    
+
     if (result.rows.length === 0) {
-      return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Produkt ikke funnet" });
+      return res.status(404).json({ message: "Produkt ikke funnet" });
     }
-    
+
     res.json({
       message: "Produkt oppdatert",
       produkt: result.rows[0]
     });
+
   } catch (error) {
     console.error("[ERROR shopController] Feil ved oppdatering av produkt", error);
-    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Feil ved oppdatering av produkt", error: error.message });
+    res.status(500).json({ message: "Feil ved oppdatering av produkt", error: error.message });
   }
 }
 
