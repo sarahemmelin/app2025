@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "51cc03d3-6c16-4dd0-a895-b84ca4b2d73c",
+		"name": "Adminklient",
+		"description": "🔐 **Autentisering**\n\nFølgende API-endepunkter krever gyldig autentisering med Bearer-token, som du får ved innlogging (`POST /login`):\n\n- `POST /api/products`\n    \n- `DELETE /api/products`\n    \n- `PATCH /api/products`\n    \n\n**Slik gjør du:**  \nUtfør innlogging via `POST /login`.  \nKopier tokenet fra responsen.  \nLim tokenet inn i variabelen `{{token}}` i Postman.\n\n**Eksempel på header:**\n\nAuthorization: Bearer {{token}}",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41167947"
+	},
+	"item": [
+		{
+			"name": "GET /api/products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://app2025.onrender.com/api/products\n",
+					"protocol": "https",
+					"host": [
+						"app2025",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"products\n"
+					]
+				},
+				"description": "Henter alle produkter fra databasen (krever innlogging).\n\n## Krav:\n\n- **Autentisering**: Du må være innlogget for å hente produkter.\n    \n- Authorization - header må inkludere en Bearer Token.\n    \n\n## Eksempel på forespørsel i Postman:\n\nURL: GET [https://app2025.onrender.com/api/products](https://app2025.onrender.com/api/productsEndFragment)  \nHeaders: Authorization: Bearer {{token}}\n\n## Statuskoder\n\n#### ✅ Vellykket Respons:\n\n200 OK : Brukeren får en liste med produkter i JSON - format.\n\n#### ❌ Feilmeldinger:\n\n401 Unauthorized: Ingen eller ugyldig token. Må logge inn.\n\n403 Forbidden: Brukeren har ikke nødvendige rettigheter.\n\n404 Not Found: Endepunktet er feil eller ikke tilgjengelig."
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/products",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"produktnavn\": \"Testprodukt\",\r\n  \"sku\": \"TEST-123\",\r\n  \"pris\": 199.99,\r\n  \"lager\": 10,\r\n  \"beskrivelse\": \"Dette er et testprodukt.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app2025.onrender.com/products",
+					"protocol": "https",
+					"host": [
+						"app2025",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"products"
+					]
+				},
+				"description": "Legger til et nytt produkt i databasen. Kun tilgjengelig for autentiserte brukere med nødvendige rettigheter.\n\n## Krav:\n\n- Må være logget inn og ha gyldig token.\n    \n- Token sendes i Authorization - headeren som:\n    \n    - Authorization: Bearer {{token}}\n        \n\n## Eksempel på forespørsel i Postman:\n\n**URL:** POST [https://app2025.onrender.com/api/products](https://app2025.onrender.com/api/productsEndFragment)  \n**Headers:** Authorization: Bearer {{token}}\n\n**Body** (må sendes som JSON i RAW - format):\n\n{  \n\"produktnavn\": \"Acrylic Gouache - Permanent Red\",  \n\"sku\": \"AG-PR-003\",  \n\"lager\": 25,  \n\"pris\": 219.00,  \n\"beskrivelse\": \"Kraftig rød akrylgouache med høy dekkevne.\"\n\n}\n\n## Statuskoder\n\n#### ✅ Vellykket Respons:\n\n201 Created: Vellykket respons.\n\n#### ❌ Feilmeldinger:\n\n400 Bad Request: Manglende eller feil formatert JSON - body.\n\n401 Unauthorized: Ingen eller ugyldig token. Må logge inn.\n\n403 Forbidden: Brukeren har ikke nødvendige rettigheter.\n\n500 Internal Server Error: Noe gikk galt på serveren."
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /api/products/:id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pris\": 249.99\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app2025.onrender.com/api/products/4",
+					"protocol": "https",
+					"host": [
+						"app2025",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"products",
+						"4"
+					]
+				},
+				"description": "Oppdaterer et eksisterende produkt i databasen. Kun tilgjengelig for autentiserte brukere med nødvendige rettigheter.\n\n## Krav:\n\n- Må være logget inn og ha gyldig token.\n    \n- Token sendes i Authorization - headeren som:\n    \n    - Authorization: Bearer {{token}}\n        \n- :id er produktets unike ID som skal oppdateres.\n    \n\n## Eksempel på forespørsel i Postman:\n\n- **URL:** PATCH [https://app2025.onrender.com/api/products/:id](https://app2025.onrender.com/api/productsEndFragment)\n    \n- **Headers:**\n    \n    - Authorization: Bearer {{token}}\n        \n    - Content-Type: application/json\n        \n- **Body** (må sendes som JSON i RAW - format):  \n    (Dette eksemplet oppdaterer kun produktnavn og pris.)\n    \n\n{  \n\"produktnavn\": \"Acrylic Gouache - Deep Red\",  \n\"pris\": 249.00  \n}\n\n## Statuskoder\n\n#### ✅ Vellykket Respons:\n\n201: Created.\n\n#### ❌ Feilmeldinger:\n\n400 Bad request: Manglende eller feil formatert JSON - body.\n\n401 Unauthorized: Ingen eller ugyldig token. Må logge inn.\n\n403 Forbidden: Brukeren har ikke nødvendige rettigheter.\n\n500 Internal Server Error: Noe gikk galt på serveren."
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /api/products/:id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://app2025.onrender.com/products/5",
+					"protocol": "https",
+					"host": [
+						"app2025",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"products",
+						"5"
+					]
+				},
+				"description": "Sletter et produkt fra databasen. Kun tilgjengelig for autentiserte brukere med nødvendige rettigheter.\n\n## Krav:\n\n- Må være logget inn og ha gyldig token.\n    \n- Token sendes i Authorization - headeren som:\n    \n    - Authorization: Bearer {{token}}\n        \n\n**Produktet kan ikke være ID** **`0`**, siden dette er et dummy-produkt.\n\n## Eksempel på forespørsel i Postman:\n\n- **URL:** DELETE [https://app2025.onrender.com/api/products/:id](https://app2025.onrender.com/api/productsEndFragment)\n    \n- **Headers:**\n    \n    - Authorization: Bearer {{token}}\n        \n\n#### ✅ Vellykket Respons:\n\n200: OK\n\n#### ❌ Feilmeldinger:\n\n400 Bad Request: Ugyldig ID.\n\n401 Unauthorized: Mangler gyldig token.\n\n403 Forbidden: Kan ikke slette dummy - produkt med id (0).\n\n500 Internal Server Error: Noe gikk galt på serveren."
+			},
+			"response": []
+		},
+		{
+			"name": "POST /login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"dinBruker\",\r\n  \"password\": \"dittPassord\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://app2025.onrender.com/login",
+					"protocol": "https",
+					"host": [
+						"app2025",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "🔑 Innlogging (POST /login)\n\nUtfør innlogging for å få et gyldig Bearer-token.\n\nEksempel på request body:  \n{  \n\"username\": \"dinBruker\",  \n\"password\": \"dittPassord\"  \n}\n\nVed gyldig innlogging får du tilbake et token som brukes videre for autentisering.\n\nTokenet brukes slik:  \nAuthorization: Bearer {{token}}"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "\tYOUR_BEARER_TOKEN_HERE",
+			"type": "default"
+		}
+	]
+}
