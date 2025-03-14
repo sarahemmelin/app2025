@@ -1,5 +1,5 @@
 import express from "express";
-import { storeToken, verifyPassword } from "../modules/auth.mjs";
+import { storeToken, verifyPassword } from "../middleware/auth.mjs";
 import { DEBUG_MODE } from "../config/debug.mjs";
 import HTTP_CODES from "../utils/httpCodes.mjs";
 

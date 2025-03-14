@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateToken } from "../modules/auth.mjs";
+import { authenticateToken } from "../middleware/auth.mjs";
 import { getAllProducts, getProduct, createProduct, deleteProduct, updateProduct } from "../controllers/shopController.mjs";
 
 const router = express.Router();

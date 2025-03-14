@@ -2,12 +2,13 @@
 import express from 'express';
 import shopAPI from './routes/shopAPI.mjs';
 import authAPI from './routes/authAPI.mjs';
-import { vanguard } from './modules/vanguard.mjs';
+import { vanguard } from './middleware/vanguard.mjs';
 import path from 'path';
-import log, { eventLogger, LOGG_LEVELS } from './modules/log.mjs';
+import log, { eventLogger, LOGG_LEVELS } from './middleware/log.mjs';
 import { DEBUG_MODE } from './config/debug.mjs';
 import { fileURLToPath } from "url";
 import HTTP_CODES from './utils/httpCodes.mjs';
+import securityAPI from './routes/securityAPI.mjs';
 
 if (DEBUG_MODE) console.log("DEBUG NODE_ENV:", process.env.NODE_ENV || "Ikke satt");
 
@@ -46,6 +47,7 @@ server.use((req, res, next) => {
 server.use(express.static(path.resolve(__dirname, "../frontend/public")));
 server.use("/api/products", shopAPI);
 server.use("/api/", authAPI);
+server.use("/api", securityAPI);
 
 server.get("*", (req, res) => {
     if (req.url.startsWith("/api")) {

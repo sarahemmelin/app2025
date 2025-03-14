@@ -1,8 +1,3 @@
-//TODO: 
-//1. Legge inn DEBUG_MODE i alle filer. 
-//2. Rydde opp i statuskoder (skal komme fra en felles fil).
-//3. Rydde opp i kode som ikke brukes lengre
-
 import pool from "../config/dbConnect.mjs";
 import fs from "fs/promises";
 import { DEBUG_MODE } from "../config/debug.mjs";

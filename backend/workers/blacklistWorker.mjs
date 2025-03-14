@@ -1,42 +1,33 @@
 import { parentPort } from "worker_threads";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const BLACKLIST_FILE = path.join(__dirname, "../data/blacklist.json");
+// import fs from "fs/promises";
+// import path from "path";
+// import { fileURLToPath } from "url";
+import pool from "../config/dbConnect.mjs";
 
 async function saveBlacklist(blacklistedIPs) {
     try {
-        const jsonData = JSON.stringify([...blacklistedIPs], null, 2);
-        console.log("Oppdatert Blacklist:", jsonData);
+        await pool.query("TRUNCATE TABLE blacklist RESTART IDENTITY;");
+        for (const ip of blacklistedIPs) {
+            await pool.query("INSERT INTO blacklist (ip, reason) VALUES ($1, 'Automatisk blokkering') ON CONFLICT (ip) DO NOTHING;", [ip]);
+        }
 
-        await fs.writeFile(BLACKLIST_FILE, jsonData);
-        console.log("[Blacklist Worker] Lagret blacklist.json!");
-
+        console.log("[Blacklist Worker] Lagret blacklist i databasen!");
         parentPort.postMessage({ type: "saved" });
 
     } catch (error) {
-        console.error("[Blacklist Worker] Feil ved lagring:", error);
+        console.error("[Blacklist Worker] Feil ved lagring til database:", error);
     }
 }
 
 async function loadBlacklist() {
     try {
-        const exists = await fs.access(BLACKLIST_FILE).then(() => true).catch(() => false);
-        if (!exists) {
-            console.log("[Blacklist Worker] blacklist.json ikke funnet, oppretter ny fil...");
-            await fs.writeFile(BLACKLIST_FILE, JSON.stringify([]));
-            return new Set();
-        }
+        const result = await pool.query("SELECT ip FROM blacklist;");
+        const blacklistedIPs = new Set(result.rows.map(row => row.ip));
 
-        const data = JSON.parse(await fs.readFile(BLACKLIST_FILE, "utf8"));
-        console.log("[Blacklist Worker] Lastet inn blacklist:", data);
-        return new Set(data);
+        console.log("[Blacklist Worker] Lastet inn blacklist fra databasen:", [...blacklistedIPs]);
+        return blacklistedIPs;
     } catch (error) {
-        console.error("[Blacklist Worker] Feil ved lasting av blacklist:", error);
+        console.error("[Blacklist Worker] Feil ved lasting av blacklist fra database:", error);
         return new Set();
     }
 }
