@@ -10,7 +10,7 @@ class AddProductForm extends HTMLElement {
       const response = await fetch("/templates/addProductForm.html");
       if (!response.ok) {
         throw new Error(
-          `[ERROR] Feil ved lasting av form-template: ${response.status}`
+          `[ERROR addProductForm] Feil ved lasting av form-template: ${response.status}`
         );
       }
       const text = await response.text();
@@ -23,12 +23,12 @@ class AddProductForm extends HTMLElement {
         this.addListeners();
       } else {
         console.error(
-          "[ERROR] Fant ikke <template> elementet i addProductForm.html"
+          "[ERROR addProductForm] Fant ikke <template> elementet i addProductForm.html"
         );
       }
     } catch (error) {
       console.error(
-        "[ERROR] Feil ved lasting av addProductForm template:",
+        "[ERROR addProductForm] Feil ved lasting av addProductForm template:",
         error
       );
     }
