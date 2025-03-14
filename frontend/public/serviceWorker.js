@@ -6,7 +6,12 @@ const contentToCache = [
     "/js/app.mjs",
     "/icons/small.png",
     "/icons/large.png",
-    "/css/style.css"
+    "/css/style.css", 
+    "/templates/addProductForm.html",
+    "/templates/adminView.html",
+    "/templates/login.html", 
+    "/templates/productCard.html",
+    "/templates/productCardEdit.html"
 ];
 
 self.addEventListener("install", async (e) => {
