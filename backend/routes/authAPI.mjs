@@ -1,6 +1,7 @@
 import express from "express";
 import { storeToken, verifyPassword } from "../modules/auth.mjs";
 import { DEBUG_MODE } from "../config/debug.mjs";
+import HTTP_CODES from "../utils/httpCodes.mjs";
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "E-post og passord kreves." });
+    return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({ message: "E-post og passord kreves." });
   } 
 
   const admin = {
@@ -32,12 +33,12 @@ router.post("/login", (req, res) => {
 
   if (email !== admin.email) {
     console.error("[ERROR authAPI] Feil e-post!");
-    return res.status(401).json({ message: "Feil brukernavn eller passord." });
+    return res.status(HTTP_CODES.CLIENT_ERROR.UNAUTHORIZED).json({ message: "Feil brukernavn eller passord." });
   }
 
   if (!verifyPassword(password, admin.salt, admin.passwordHash)) {
     console.error("[ERROR authAPI] Feil passord!");
-    return res.status(401).json({ message: "Feil brukernavn eller passord." });
+    return res.status(HTTP_CODES.CLIENT_ERROR.UNAUTHORIZED).json({ message: "Feil brukernavn eller passord." });
   }
 
   const token = generateToken();
