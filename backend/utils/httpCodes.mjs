@@ -1,4 +1,3 @@
-
 const HTTP_CODES = {
     SUCCESS: {
         OK: 200,

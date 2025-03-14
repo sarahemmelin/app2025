@@ -37,7 +37,6 @@ export async function getProduct(req, res) {
 }
 
 export async function createProduct(req, res) {
-  console.log("[DEBUG shopController] POST /products mottatt med data:", req.body);
   try {
 
     let { produktnavn, sku, merke_id, kategori_id, farge_id, pigmenter, pris, lager, lagerstatus, beskrivelse } = req.body;
@@ -161,9 +160,6 @@ export async function deleteProduct(req, res) {
 
     const deleteQuery = "DELETE FROM produkter WHERE id = $1 RETURNING *";
     const deleteResult = await pool.query(deleteQuery, [id]);
-    if (DEBUG_MODE) {
-      console.log(`[DEBUG shopController] Produkt med ID ${id} slettet.`);
-    }
     res.json({ message: `Produkt med ID ${id} slettet`, produkt: deleteResult.rows[0] });
   } catch (error) {
     console.error("[ERROR shopController] Feil ved sletting av produkt", error);
@@ -208,8 +204,7 @@ const resetProductsFile = async () => {
     };
 
     await fs.writeFile(filePath, JSON.stringify({ "0": dummyProduct }, null, 2));
-    if (DEBUG_MODE) console.log("[DEBUG shopController] shopProducts.json er gjenopprettet med standarddata.");
-
+    
   } catch (error) {
     console.error("[ERROR] Klarte ikke å gjenopprette produkter:", error.message);
   }
