@@ -149,10 +149,6 @@ export async function deleteProduct(req, res) {
   try {
     const { id } = req.params;
 
-    if (id === "0") {
-      return res.status(HTTP_CODES.CLIENT_ERROR.FORBIDDEN).json({ message: "Dummy-produktet kan ikke slettes!" });
-    }
-
     const productResult = await pool.query("SELECT * FROM produkter WHERE id = $1", [id]);
     if (productResult.rows.length === 0) {
       return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: `Produkt med ID ${id} ikke funnet` });
